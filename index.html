@@ -93,11 +93,11 @@
       </div>
     </header>
 
-    <div id="captureZone">
+    <div id="captureZone" class="page">
       <div class="grid" id="eggGrid"></div>
     </div>
 
-    <div id="locationZone"></div>
+    <div id="locationZone" class="page hidden"></div>
 
     <button class="assistant-btn" onclick="toggleViewMode()">
       <img
@@ -188,21 +188,40 @@
       }
 
       function toggleViewMode() {
-        viewMode = viewMode === "dex" ? "loc" : "dex";
-        document.getElementById("captureZone").style.display =
-          viewMode === "dex" ? "block" : "none";
-        document.getElementById("dexControls").style.display =
-          viewMode === "dex" ? "block" : "none";
-        document.getElementById("locationZone").style.display =
-          viewMode === "loc" ? "block" : "none";
-        document.getElementById("locControls").style.display =
-          viewMode === "loc" ? "block" : "none";
-        document.getElementById("viewIcon").src =
-          viewMode === "dex"
-            ? "./assets/img/location_icon.png"
-            : "./assets/img/egg_icon.png";
-        render();
-      }
+  const dex = document.getElementById("captureZone");
+  const loc = document.getElementById("locationZone");
+
+  if (viewMode === "dex") {
+    viewMode = "loc";
+
+    dex.classList.add("hidden");
+
+    setTimeout(() => {
+      loc.classList.remove("hidden");
+      render();
+    }, 200);
+  } else {
+    viewMode = "dex";
+
+    loc.classList.add("hidden");
+
+    setTimeout(() => {
+      dex.classList.remove("hidden");
+      render();
+    }, 200);
+  }
+
+  document.getElementById("dexControls").style.display =
+    viewMode === "dex" ? "block" : "none";
+
+  document.getElementById("locControls").style.display =
+    viewMode === "loc" ? "block" : "none";
+
+  document.getElementById("viewIcon").src =
+    viewMode === "dex"
+      ? "./assets/img/location_icon.png"
+      : "./assets/img/egg_icon.png";
+}
 
       function createEggCard(i) {
         const count = eggData[i];
