@@ -198,32 +198,32 @@
   viewMode = viewMode === "dex" ? "loc" : "dex";
 
   if (viewMode === "loc") {
-    // 1. Start fading out Dex
+
     dex.classList.add("hidden");
     dex.classList.remove("visible");
     dexControls.style.display = "none";
 
-    // 2. Prepare Location Zone
-    loc.style.display = "block"; // Ensure it exists in DOM
-    render(); // Draw the eggs into the zone
+  
+    loc.style.display = "block"; 
+    render(); 
 
-    // 3. Fade in Loc
+   
     setTimeout(() => {
       loc.classList.remove("hidden");
       loc.classList.add("visible");
       locControls.style.display = "block";
     }, 50);
   } else {
-    // 1. Start fading out Loc
+
     loc.classList.add("hidden");
     loc.classList.remove("visible");
     locControls.style.display = "none";
 
-    // 2. Prepare Dex
+
     dex.style.display = "block";
     render();
 
-    // 3. Fade in Dex
+
     setTimeout(() => {
       dex.classList.remove("hidden");
       dex.classList.add("visible");
@@ -338,8 +338,6 @@
         render();
       }
 
-      // Add this variable at the top of your script to prevent 
-// confetti from firing every time you click + after you're already done.
 let hasCelebrated = false;
 
 function updateStats() {
@@ -354,17 +352,17 @@ function updateStats() {
   document.getElementById("progressPercent").innerText = percent + "%";
   document.getElementById("totalEggsCount").innerText = totalSum;
 
-  // --- CELEBRATION LOGIC ---
+
   if (percent === 100 && !hasCelebrated) {
     fireCelebration();
-    hasCelebrated = true; // Prevents spamming confetti
+    hasCelebrated = true; /
   } else if (percent < 100) {
-    hasCelebrated = false; // Reset if they lose an egg/reset data
+    hasCelebrated = false; 
   }
 }
 
 function fireCelebration() {
-  // Professional multi-burst confetti
+
   const duration = 3 * 1000;
   const end = Date.now() + duration;
 
@@ -475,7 +473,7 @@ function fireCelebration() {
         Swal.fire({
           title: "EggDex Guide & Privacy",
           icon: "info",
-          // This adds the dark mode class to the popup if active
+      
           customClass: {
             popup: isDarkMode ? "dark-mode" : "",
           },
@@ -592,22 +590,63 @@ function showEggDetails(eggId) {
   });
 }
       async function openSettings() {
-        const res = await Swal.fire({
-          title: "Settings",
-          showDenyButton: true,
-          confirmButtonText: "Check All",
-          denyButtonText: "Reset All",
-          confirmButtonColor: "#b2e2f2",
-          denyButtonColor: "#ffcf96",
-        });
-        if (res.isConfirmed) {
-          for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 1;
-          render();
-        } else if (res.isDenied) {
-          for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 0;
-          render();
-        }
-      }
+  const res = await Swal.fire({
+    title: "Settings",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Check All",
+    denyButtonText: "Reset All",
+    cancelButtonText: "Close",
+    confirmButtonColor: "#b2e2f2",
+    denyButtonColor: "#ffcf96",
+    customClass: {
+      popup: isDarkMode ? "dark-mode" : "",
+    },
+    background: isDarkMode ? "var(--card)" : "#ffffff",
+    color: "var(--text)",
+  });
+
+  // Logic for Check All
+  if (res.isConfirmed) {
+    const confirmCheck = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will mark all 100 eggs as collected!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#b2e2f2",
+      confirmButtonText: "Yes, check all",
+    });
+
+    if (confirmCheck.isConfirmed) {
+      for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 1;
+      render();
+      Swal.fire("Updated!", "All eggs have been marked as collected.", "success");
+    }
+  } 
+  
+
+  else if (res.isDenied) {
+    const confirmReset = await Swal.fire({
+      title: "Reset All Progress?",
+      text: "You will lose all your tracked eggs. This cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ff7675", 
+      cancelButtonColor: "#b2e2f2",
+      confirmButtonText: "Yes, reset everything!",
+      customClass: {
+        popup: isDarkMode ? "dark-mode" : "",
+      },
+    });
+
+    if (confirmReset.isConfirmed) {
+      for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 0;
+      hasCelebrated = false;
+      render();
+      Swal.fire("Reset!", "Your inventory has been cleared.", "success");
+    }
+  }
+}
 
       checkFirstTime();
       render();
