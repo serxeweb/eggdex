@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EggDex</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" type="image/png" href="./assets/img/serxe_easter_icon.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+   
+</head>
+<body>
+
+<header>
+    <div class="profile-card">
+        <div class="header-actions">
+            <i class="fas fa-moon theme-toggle" id="themeToggle" onclick="toggleDarkMode()"></i>
+            <i class="fas fa-cog settings-icon" onclick="openSettings()"></i>
+        </div>
+        <div id="displayPic" class="profile-pic">
+            <img src="./assets/img/user_profile.png" alt="Profile">
+        </div>
+        <div class="profile-right" style="flex-grow: 1;">
+            <h2 id="displayUser" style="margin:0 0 5px 0; font-size: 1.1rem;">Loading...</h2>
+            <div class="progress-wrapper">
+                <div class="progress-container">
+                    <div id="progressBar"></div>
+                </div>
+                <span id="progressPercent">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('collected', this)">Owned</button>
+        <button class="filter-btn" onclick="setFilter('missing', this)">Missing</button>
+    </div>
+
+    <div class="btn-group">
+        <button class="action-btn copy-btn" onclick="copyTradeText()">
+            <i class="fas fa-copy"></i> Copy List
+        </button>
+        <button class="action-btn snap-btn" onclick="takeScreenshot()">
+            <i class="fas fa-camera"></i> Screenshot
+        </button>
+    </div>
+</header>
+
+<div id="captureZone">
+    <div class="grid" id="eggGrid"></div>
+</div>
+
+<button class="assistant-btn" onclick="openAssistant()">
+    <img src="./assets/img/serxe_easter_icon.png" alt="Assistant">
+</button>
+
+<script src="./assets/script.js">
+   
+</script>
+
+</body>
+</html>
