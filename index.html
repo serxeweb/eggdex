@@ -108,142 +108,123 @@
       />
     </button>
 
-    <script >
-      const totalUniqueEggs = 100;
-      let currentFilter = "all";
-      let viewMode = "dex";
-      let eggData = JSON.parse(localStorage.getItem("eggInventory")) || {};
-      let userData = JSON.parse(localStorage.getItem("eggUserData")) || {
-        name: "",
-      };
-      let isDarkMode = localStorage.getItem("darkMode") === "true";
+    
+  <script>
+  const totalUniqueEggs = 100;
+  let currentFilter = "all";
+  let viewMode = "dex";
+  let eggData = JSON.parse(localStorage.getItem("eggInventory")) || {};
+  let userData = JSON.parse(localStorage.getItem("eggUserData")) || {
+    name: "",
+  };
+  let isDarkMode = localStorage.getItem("darkMode") === "true";
 
-      const areaData = [
-        {
-          name: "Spawn Eggs",
-          desc: "Common eggs that appear around the map.",
-          eggs: [
-            1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83,
-            84, 85,
-          ],
-          img: "./assets/img/spawn.jpg",
-        },
-        {
-          name: "Bush/Grass Eggs",
-          desc: "Found by cutting grass and bushes, including indoors and in Big City. (26 & 76 indoor), (30 Big City)",
-          eggs: [
-            6, 7, 8, 9, 10, 26, 27, 28, 29, 30, 56, 57, 58, 59, 60, 76, 77, 78,
-            79, 80,
-          ],
-          img: "./assets/img/bush.jpg",
-        },
-        {
-          name: "Dig Eggs",
-          desc: "Buried eggs found in (21,46,71,96 Big City), (22,47,72,97 RR Caves), (23,48,73,98 Destiny), (24,49,74,99 Easter Grove), and other (25,50,75,100) dig spots.",
-          eggs: [
-            21, 22, 23, 24, 25, 46, 47, 48, 49, 50, 71, 72, 73, 74, 75, 96, 97,
-            98, 99, 100,
-          ],
-          img: "./assets/img/dig.jpg",
-        },
-        {
-          name: "Spider - Crab - Archer - Blob Eggs",
-          desc: "Dropped by defeating Spiders, Crabs, Archers, and Blobs.",
-          eggs: [11, 13, 41, 43, 61, 63, 91, 93],
-          img: "./assets/img/blob.jpg",
-        },
-        {
-          name: "Rebel - Pyrat - Bandit - Snake Eggs",
-          desc: "Dropped by defeating Rebels, Pyrats, Bandits, and Snakes.",
-          eggs: [12, 42, 62, 92],
-          img: "./assets/img/bandit.jpg",
-        },
-        {
-          name: "Pot/Loot Eggs",
-          desc: "Found inside breakable pots or loots.",
-          eggs: [
-            16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87,
-            88, 89, 90,
-          ],
-          img: "./assets/img/pots.jpg",
-        },
-        {
-          name: "Bat - Rat - Blob - Lizardon Eggs",
-          desc: "Dropped by defeating Bats, Rats, Blobs, and (15,45,65, 95 Lizardons).",
-          eggs: [14, 15, 44, 45, 64, 65, 94, 95],
-          img: "./assets/img/bat.jpg",
-        },
-      ];
+  const areaData = [{
+      name: "Spawn Eggs",
+      desc: "Common eggs that appear around the map.",
+      eggs: [1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83, 84, 85],
+      img: "./assets/img/spawn.jpg",
+    },
+    {
+      name: "Bush/Grass Eggs",
+      desc: "Found by cutting grass and bushes, including indoors and in Big City. (26 & 76 indoor), (30 Big City)",
+      eggs: [6, 7, 8, 9, 10, 26, 27, 28, 29, 30, 56, 57, 58, 59, 60, 76, 77, 78, 79, 80],
+      img: "./assets/img/bush.jpg",
+    },
+    {
+      name: "Dig Eggs",
+      desc: "Buried eggs found in (21,46,71,96 Big City), (22,47,72,97 RR Caves), (23,48,73,98 Destiny), (24,49,74,99 Easter Grove), and other (25,50,75,100) dig spots.",
+      eggs: [21, 22, 23, 24, 25, 46, 47, 48, 49, 50, 71, 72, 73, 74, 75, 96, 97, 98, 99, 100],
+      img: "./assets/img/dig.jpg",
+    },
+    {
+      name: "Spider - Crab - Archer - Blob Eggs",
+      desc: "Dropped by defeating Spiders, Crabs, Archers, and Blobs.",
+      eggs: [11, 13, 41, 43, 61, 63, 91, 93],
+      img: "./assets/img/blob.jpg",
+    },
+    {
+      name: "Rebel - Pyrat - Bandit - Snake Eggs",
+      desc: "Dropped by defeating Rebels, Pyrats, Bandits, and Snakes.",
+      eggs: [12, 42, 62, 92],
+      img: "./assets/img/bandit.jpg",
+    },
+    {
+      name: "Pot/Loot Eggs",
+      desc: "Found inside breakable pots or loots.",
+      eggs: [16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87, 88, 89, 90],
+      img: "./assets/img/pots.jpg",
+    },
+    {
+      name: "Bat - Rat - Blob - Lizardon Eggs",
+      desc: "Dropped by defeating Bats, Rats, Blobs, and (15,45,65, 95 Lizardons).",
+      eggs: [14, 15, 44, 45, 64, 65, 94, 95],
+      img: "./assets/img/bat.jpg",
+    },
+  ];
 
-      if (isDarkMode) document.body.classList.add("dark-mode");
-      for (let i = 1; i <= totalUniqueEggs; i++)
-        if (eggData[i] === undefined) eggData[i] = 0;
+  if (isDarkMode) document.body.classList.add("dark-mode");
+  for (let i = 1; i <= totalUniqueEggs; i++)
+    if (eggData[i] === undefined) eggData[i] = 0;
 
-      function toggleDarkMode() {
-        isDarkMode = !isDarkMode;
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem("darkMode", isDarkMode);
-        document.getElementById("themeToggle").className = isDarkMode
-          ? "fas fa-sun header-icon"
-          : "fas fa-moon header-icon";
-      }
-
-  function toggleViewMode() {
-  const dex = document.getElementById("captureZone");
-  const loc = document.getElementById("locationZone");
-  const dexControls = document.getElementById("dexControls");
-  const locControls = document.getElementById("locControls");
-
-  // Toggle mode
-  viewMode = viewMode === "dex" ? "loc" : "dex";
-
-  if (viewMode === "loc") {
-
-    dex.classList.add("hidden");
-    dex.classList.remove("visible");
-    dexControls.style.display = "none";
-
-  
-    loc.style.display = "block"; 
-    render(); 
-
-   
-    setTimeout(() => {
-      loc.classList.remove("hidden");
-      loc.classList.add("visible");
-      locControls.style.display = "block";
-    }, 50);
-  } else {
-
-    loc.classList.add("hidden");
-    loc.classList.remove("visible");
-    locControls.style.display = "none";
-
-
-    dex.style.display = "block";
-    render();
-
-
-    setTimeout(() => {
-      dex.classList.remove("hidden");
-      dex.classList.add("visible");
-      dexControls.style.display = "block";
-    }, 50);
+  function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode);
+    document.getElementById("themeToggle").className = isDarkMode ?
+      "fas fa-sun header-icon" :
+      "fas fa-moon header-icon";
   }
 
-  // Update Footer Icon
-  document.getElementById("viewIcon").src =
-    viewMode === "dex"
-      ? "./assets/img/location_icon.png"
-      : "./assets/img/egg_icon.png";
-}
+  function toggleViewMode() {
+    const dex = document.getElementById("captureZone");
+    const loc = document.getElementById("locationZone");
+    const dexControls = document.getElementById("dexControls");
+    const locControls = document.getElementById("locControls");
 
-      function createEggCard(i) {
-        const count = eggData[i];
-        const hue = (i * 137.5) % 360;
-        const card = document.createElement("div");
-        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
-        card.innerHTML = `
+    viewMode = viewMode === "dex" ? "loc" : "dex";
+
+    if (viewMode === "loc") {
+      dex.classList.add("hidden");
+      dex.classList.remove("visible");
+      dexControls.style.display = "none";
+      loc.style.display = "block";
+      render();
+      setTimeout(() => {
+        loc.classList.remove("hidden");
+        loc.classList.add("visible");
+        locControls.style.display = "block";
+      }, 50);
+    } else {
+      loc.classList.add("hidden");
+      loc.classList.remove("visible");
+      locControls.style.display = "none";
+      dex.style.display = "block";
+      render();
+      setTimeout(() => {
+        dex.classList.remove("hidden");
+        dex.classList.add("visible");
+        dexControls.style.display = "block";
+      }, 50);
+    }
+
+    document.getElementById("viewIcon").src =
+      viewMode === "dex" ?
+      "./assets/img/location_icon.png" :
+      "./assets/img/egg_icon.png";
+  }
+
+  function createEggCard(i) {
+    const count = eggData[i];
+    const hue = (i * 137.5) % 360;
+    const card = document.createElement("div");
+    card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
+    card.onclick = (e) => {
+      if (!e.target.closest(".qty-btn")) {
+        showEggDetails(i);
+      }
+    };
+    card.innerHTML = `
           <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
           <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
           <div class="qty-controls">
@@ -251,33 +232,31 @@
             <span style="font-weight:800">${count}</span>
             <button class="qty-btn" onclick="update(${i}, 1)">+</button>
           </div>`;
-        return card;
-      }
+    return card;
+  }
 
-      function renderDex() {
-        const grid = document.getElementById("eggGrid");
-        grid.innerHTML = "";
-        for (let i = 1; i <= totalUniqueEggs; i++) {
-          const count = eggData[i];
-          if (currentFilter === "collected" && count === 0) continue;
-          if (currentFilter === "missing" && count > 0) continue;
-          if (currentFilter === "duplicates" && count < 2) continue;
-          grid.appendChild(createEggCard(i));
-        }
-      }
+  function renderDex() {
+    const grid = document.getElementById("eggGrid");
+    grid.innerHTML = "";
+    for (let i = 1; i <= totalUniqueEggs; i++) {
+      const count = eggData[i];
+      if (currentFilter === "collected" && count === 0) continue;
+      if (currentFilter === "missing" && count > 0) continue;
+      if (currentFilter === "duplicates" && count < 2) continue;
+      grid.appendChild(createEggCard(i));
+    }
+  }
 
-      function renderLocations() {
-  const zone = document.getElementById("locationZone");
-  zone.innerHTML = "";
-
-  areaData.forEach((area) => {
-    const totalInCat = area.eggs.length;
-    const ownedInCat = area.eggs.filter(id => eggData[id] > 0).length;
-    const missingInCat = totalInCat - ownedInCat;
-
-    const block = document.createElement("div");
-    block.className = "location-block";
-    block.innerHTML = `
+  function renderLocations() {
+    const zone = document.getElementById("locationZone");
+    zone.innerHTML = "";
+    areaData.forEach((area) => {
+      const totalInCat = area.eggs.length;
+      const ownedInCat = area.eggs.filter(id => eggData[id] > 0).length;
+      const missingInCat = totalInCat - ownedInCat;
+      const block = document.createElement("div");
+      block.className = "location-block";
+      block.innerHTML = `
       <div class="location-header">
         <img src="${area.img}" class="location-img" alt="${area.name}">
         <div class="location-text">
@@ -290,27 +269,24 @@
           </div>
         </div>
       </div>`;
-
-    const slider = document.createElement("div");
-    slider.className = "egg-slider";
-    slider.onwheel = (e) => {
-      if (e.deltaY !== 0) {
-        e.preventDefault();
-        slider.scrollLeft += e.deltaY;
-      }
-    };
-
-    area.eggs.forEach((eggId) => {
-      slider.appendChild(createEggCard(eggId));
+      const slider = document.createElement("div");
+      slider.className = "egg-slider";
+      slider.onwheel = (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          slider.scrollLeft += e.deltaY;
+        }
+      };
+      area.eggs.forEach((eggId) => {
+        slider.appendChild(createEggCard(eggId));
+      });
+      block.appendChild(slider);
+      zone.appendChild(block);
     });
 
-    block.appendChild(slider);
-    zone.appendChild(block);
-  });
-
-  const disclaimer = document.createElement("div");
-  disclaimer.className = "disclaimer-card";
- disclaimer.innerHTML = `
+    const disclaimer = document.createElement("div");
+    disclaimer.className = "disclaimer-card";
+    disclaimer.innerHTML = `
     <div style="margin-bottom: 8px;">
       <i class="fas fa-exclamation-triangle"></i> 
       Note: These egg locations are based on the 2025 Hunt. 
@@ -323,170 +299,157 @@
     <br>
     <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
   `;
-  zone.appendChild(disclaimer);
-}
-
-      function render() {
-        if (viewMode === "dex") renderDex();
-        else renderLocations();
-        updateStats();
-        localStorage.setItem("eggInventory", JSON.stringify(eggData));
-      }
-
-      function update(id, change) {
-        eggData[id] = Math.max(0, eggData[id] + change);
-        render();
-      }
-
-let hasCelebrated = false;
-
-function updateStats() {
-  const uniqueCollected = Object.values(eggData).filter(
-    (count) => count > 0,
-  ).length;
-  
-  const totalSum = Object.values(eggData).reduce((a, b) => a + b, 0);
-  const percent = Math.round((uniqueCollected / totalUniqueEggs) * 100);
-  
-  document.getElementById("progressBar").style.width = percent + "%";
-  document.getElementById("progressPercent").innerText = percent + "%";
-  document.getElementById("totalEggsCount").innerText = totalSum;
-
-
-  if (percent === 100 && !hasCelebrated) {
-    fireCelebration();
-    hasCelebrated = true; /
-  } else if (percent < 100) {
-    hasCelebrated = false; 
+    zone.appendChild(disclaimer);
   }
-}
 
-function fireCelebration() {
+  function render() {
+    if (viewMode === "dex") renderDex();
+    else renderLocations();
+    updateStats();
+    localStorage.setItem("eggInventory", JSON.stringify(eggData));
+  }
 
-  const duration = 3 * 1000;
-  const end = Date.now() + duration;
+  function update(id, change) {
+    eggData[id] = Math.max(0, eggData[id] + change);
+    render();
+  }
 
-  (function frame() {
-    confetti({
-      particleCount: 3,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0, y: 0.6 },
-      colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
-    });
-    confetti({
-      particleCount: 3,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1, y: 0.6 },
-      colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
-    });
+  let hasCelebrated = false;
 
-    if (Date.now() < end) {
-      requestAnimationFrame(frame);
+  function updateStats() {
+    const uniqueCollected = Object.values(eggData).filter((count) => count > 0).length;
+    const totalSum = Object.values(eggData).reduce((a, b) => a + b, 0);
+    const percent = Math.round((uniqueCollected / totalUniqueEggs) * 100);
+
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressPercent").innerText = percent + "%";
+    document.getElementById("totalEggsCount").innerText = totalSum;
+
+    if (percent === 100 && !hasCelebrated) {
+      fireCelebration();
+      hasCelebrated = true;
+    } else if (percent < 100) {
+      hasCelebrated = false;
     }
-  }());
+  }
 
-  Swal.fire({
-    title: 'Egg Master!',
-    text: 'Congratulations! You have collected all 100 eggs!',
-    icon: 'success',
-    confirmButtonColor: '#ffb7ce'
-  });
-}
-
-      function setFilter(f, btn) {
-        currentFilter = f;
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        render();
+  function fireCelebration() {
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+    (function frame() {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.6 },
+        colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.6 },
+        colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
+      });
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
       }
+    }());
 
-      async function checkFirstTime() {
-        if (!userData.name) {
-          const { value: name } = await Swal.fire({
-            title: "Welcome!",
-            input: "text",
-            inputPlaceholder: "Enter name",
-            confirmButtonColor: "#ffb7ce",
-            allowOutsideClick: false,
-          });
-          if (name) {
-            userData = { name: name };
-            localStorage.setItem("eggUserData", JSON.stringify(userData));
-            updateProfileUI();
-          }
-        } else {
-          updateProfileUI();
-        }
-      }
+    Swal.fire({
+      title: 'Egg Master!',
+      text: 'Congratulations! You have collected all 100 eggs!',
+      icon: 'success',
+      confirmButtonColor: '#ffb7ce'
+    });
+  }
 
-      function updateProfileUI() {
-        document.getElementById("displayUser").innerText = userData.name;
-        const apiAvatar = `https://ui-avatars.com/api/?background=ffb7ce&color=fff&bold=true&name=${encodeURIComponent(userData.name)}`;
-        document.getElementById("displayPic").innerHTML =
-          `<img src="${userData.photo || "./assets/img/user_profile.png"}" onerror="this.src='${apiAvatar}'">`;
-      }
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  }
 
-      function takeScreenshot() {
-        const element = document.getElementById("captureZone");
-        Swal.fire({
-          title: "Snapping Photo...",
-          allowOutsideClick: false,
-          didOpen: () => Swal.showLoading(),
-        });
-        html2canvas(element, {
-          backgroundColor: getComputedStyle(document.body).backgroundColor,
-          scale: 2,
-          useCORS: true,
-        }).then((canvas) => {
-          const link = document.createElement("a");
-          link.download = `EggDex_${userData.name}.png`;
-          link.href = canvas.toDataURL();
-          link.click();
-          Swal.fire("Saved!", "Screenshot downloaded.", "success");
-        });
+  async function checkFirstTime() {
+    if (!userData.name) {
+      const { value: name } = await Swal.fire({
+        title: "Welcome!",
+        input: "text",
+        inputPlaceholder: "Enter name",
+        confirmButtonColor: "#ffb7ce",
+        allowOutsideClick: false,
+      });
+      if (name) {
+        userData = { name: name };
+        localStorage.setItem("eggUserData", JSON.stringify(userData));
+        updateProfileUI();
       }
+    } else {
+      updateProfileUI();
+    }
+  }
 
-      function copyTradeText() {
-        let missing = [];
-        let extras = [];
-        for (let i = 1; i <= totalUniqueEggs; i++) {
-          if (eggData[i] === 0) missing.push(`#${i}`);
-          if (eggData[i] > 1) extras.push(`#${i}`);
-        }
-        navigator.clipboard.writeText(
-          `NEED:${missing.join(",")} EXTRAS:${extras.join(",")}`,
-        );
-        Swal.fire({
-          title: "Copied!",
-          toast: true,
-          position: "top-end",
-          timer: 2000,
-          showConfirmButton: false,
-          icon: "success",
-        });
-      }
-      async function openAssistant() {
-        Swal.fire({
-          title: "EggDex Guide & Privacy",
-          icon: "info",
-      
-          customClass: {
-            popup: isDarkMode ? "dark-mode" : "",
-          },
-          background: isDarkMode ? "var(--card)" : "#ffffff",
-          color: "var(--text)",
-          confirmButtonColor: "#ffb7ce",
-          confirmButtonText: "Got it!",
-          width: "500px",
-          html: `
+  function updateProfileUI() {
+    document.getElementById("displayUser").innerText = userData.name;
+    const apiAvatar = `https://ui-avatars.com/api/?background=ffb7ce&color=fff&bold=true&name=${encodeURIComponent(userData.name)}`;
+    document.getElementById("displayPic").innerHTML =
+      `<img src="${userData.photo || "./assets/img/user_profile.png"}" onerror="this.src='${apiAvatar}'">`;
+  }
+
+  function takeScreenshot() {
+    const element = document.getElementById("captureZone");
+    Swal.fire({
+      title: "Snapping Photo...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+    html2canvas(element, {
+      backgroundColor: getComputedStyle(document.body).backgroundColor,
+      scale: 2,
+      useCORS: true,
+    }).then((canvas) => {
+      const link = document.createElement("a");
+      link.download = `EggDex_${userData.name}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      Swal.fire("Saved!", "Screenshot downloaded.", "success");
+    });
+  }
+
+  function copyTradeText() {
+    let missing = [];
+    let extras = [];
+    for (let i = 1; i <= totalUniqueEggs; i++) {
+      if (eggData[i] === 0) missing.push(`#${i}`);
+      if (eggData[i] > 1) extras.push(`#${i}`);
+    }
+    navigator.clipboard.writeText(`NEED:${missing.join(",")} EXTRAS:${extras.join(",")}`);
+    Swal.fire({
+      title: "Copied!",
+      toast: true,
+      position: "top-end",
+      timer: 2000,
+      showConfirmButton: false,
+      icon: "success",
+    });
+  }
+
+  async function openAssistant() {
+    Swal.fire({
+      title: "EggDex Guide & Privacy",
+      icon: "info",
+      customClass: {
+        popup: isDarkMode ? "dark-mode" : "",
+      },
+      background: isDarkMode ? "var(--card)" : "#ffffff",
+      color: "var(--text)",
+      confirmButtonColor: "#ffb7ce",
+      confirmButtonText: "Got it!",
+      width: "500px",
+      html: `
       <div style="text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--text);">
-        
         <p><strong style="color: var(--text);">Tracking all 100 eggs for the Graal Online Classic Easter Hunt 2026!</strong></p>
-        
         <p style="margin-top: 20px; color: var(--primary); font-weight: bold;">
           <i class="fas fa-question-circle"></i> How To Use
         </p>
@@ -496,161 +459,116 @@ function fireCelebration() {
           <li>Tap the bottom <i class="fas fa-map-marker-alt"></i> icon to switch to <strong>Egg Locations</strong>.</li>
           <li>Tap the bottom <i class="fas fa-egg"></i> icon to return to the full grid.</li>
         </ul>
-
         <p style="margin-top: 20px; color: var(--success); font-weight: bold;">
           <i class="fas fa-shield-alt"></i> Your Data & Privacy
         </p>
         <p style="margin-top: 5px; padding-left: 5px; color: var(--text); opacity: 0.9;">
           This application is designed to respect your privacy 100%. We do <strong>not</strong> use servers. All your information is stored locally in your <strong>browser memory</strong>.
         </p>
-        
         <div style="background-color: rgba(255, 207, 150, 0.15); border-left: 4px solid var(--danger); padding: 10px; margin-top: 15px; border-radius: 8px;">
           <p style="margin: 0; color: var(--text);"><strong style="color: var(--danger);">IMPORTANT WARNING:</strong></p>
           <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: var(--text);">
             Clearing your browser cache or site data will <b>reset your progress</b>. Be careful with "cleaning" apps or Incognito modes.
           </p>
         </div>
-        
         <hr style="border: 0; border-top: 1px solid var(--gray); opacity: 0.3; margin: 20px 0;">
-        
         <div style="text-align: center; font-size: 0.85rem; opacity: 0.8; color: var(--text);">
           <p><i class="fas fa-code"></i> Developed by: <strong>Serxe</strong></p>
         </div>
-      </div>
-    `,
-        });
-      }
-function createEggCard(i) {
-  const count = eggData[i];
-  const hue = (i * 137.5) % 360;
-  const card = document.createElement("div");
-  card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
-
-  // Modal Trigger
-  card.onclick = (e) => {
-    if (!e.target.closest(".qty-btn")) {
-      showEggDetails(i);
-    }
-  };
-
-  card.innerHTML = `
-          <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
-          <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
-          <div class="qty-controls">
-            <button class="qty-btn" onclick="update(${i}, -1)">-</button>
-            <span style="font-weight:800">${count}</span>
-            <button class="qty-btn" onclick="update(${i}, 1)">+</button>
-          </div>`;
-  return card;
-}
-
-function showEggDetails(eggId) {
-  const locations = areaData.filter((area) => area.eggs.includes(eggId));
-  const hue = (eggId * 137.5) % 360;
-
-  let locationHtml =
-    locations
-      .map(
-        (loc) => `
-            <div style="display: flex; align-items: center; gap: 12px; background: ${isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"}; padding: 12px; border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05);">
-                <img src="${loc.img}" style="width: 70px; height: 50px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                <div style="text-align: left;">
-                    <div style="font-weight: 700; font-size: 0.9rem; color: var(--text);">${loc.name}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8; color: var(--text); line-height: 1.3; margin-top: 2px;">${loc.desc}</div>
-                </div>
-            </div>
-        `,
-      )
-      .join("") ||
-    `<p style="opacity: 0.6; padding: 20px;">No specific location data found for this egg.</p>`;
-
-  Swal.fire({
-    title: `Egg Details #${eggId}`,
-    background: isDarkMode ? "var(--card)" : "#ffffff",
-    color: "var(--text)",
-    confirmButtonColor: "var(--primary)",
-    confirmButtonText: "Close Guide",
-    borderRadius: "24px",
-    showCloseButton: true,
-    html: `
-                <div style="padding-top: 10px;">
-                    <div style="background: var(--accent); width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <div class="egg-icon" style="--hue: ${hue}deg; font-size: 60px;">🥚</div>
-                    </div>
-
-                    <div style="font-weight: 700; margin: 20px 0 12px; color: var(--text); text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-map-marker-alt" style="color: var(--danger);"></i> Where to Find
-                    </div>
-
-                    <div style="max-height: 250px; overflow-y: auto; padding-right: 5px;" class="custom-scroll">
-                        ${locationHtml}
-                    </div>
-                </div>
-            `,
-  });
-}
-      async function openSettings() {
-  const res = await Swal.fire({
-    title: "Settings",
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Check All",
-    denyButtonText: "Reset All",
-    cancelButtonText: "Close",
-    confirmButtonColor: "#b2e2f2",
-    denyButtonColor: "#ffcf96",
-    customClass: {
-      popup: isDarkMode ? "dark-mode" : "",
-    },
-    background: isDarkMode ? "var(--card)" : "#ffffff",
-    color: "var(--text)",
-  });
-
-  // Logic for Check All
-  if (res.isConfirmed) {
-    const confirmCheck = await Swal.fire({
-      title: "Are you sure?",
-      text: "This will mark all 100 eggs as collected!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#b2e2f2",
-      confirmButtonText: "Yes, check all",
+      </div>`,
     });
+  }
 
-    if (confirmCheck.isConfirmed) {
-      for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 1;
-      render();
-      Swal.fire("Updated!", "All eggs have been marked as collected.", "success");
-    }
-  } 
-  
+  function showEggDetails(eggId) {
+    const locations = areaData.filter((area) => area.eggs.includes(eggId));
+    const hue = (eggId * 137.5) % 360;
+    let locationHtml = locations.map((loc) => `
+      <div style="display: flex; align-items: center; gap: 12px; background: ${isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"}; padding: 12px; border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05);">
+          <img src="${loc.img}" style="width: 70px; height: 50px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+          <div style="text-align: left;">
+              <div style="font-weight: 700; font-size: 0.9rem; color: var(--text);">${loc.name}</div>
+              <div style="font-size: 0.75rem; opacity: 0.8; color: var(--text); line-height: 1.3; margin-top: 2px;">${loc.desc}</div>
+          </div>
+      </div>`).join("") || `<p style="opacity: 0.6; padding: 20px;">No specific location data found for this egg.</p>`;
 
-  else if (res.isDenied) {
-    const confirmReset = await Swal.fire({
-      title: "Reset All Progress?",
-      text: "You will lose all your tracked eggs. This cannot be undone!",
-      icon: "warning",
+    Swal.fire({
+      title: `Egg Details #${eggId}`,
+      background: isDarkMode ? "var(--card)" : "#ffffff",
+      color: "var(--text)",
+      confirmButtonColor: "var(--primary)",
+      confirmButtonText: "Close Guide",
+      borderRadius: "24px",
+      showCloseButton: true,
+      html: `
+        <div style="padding-top: 10px;">
+          <div style="background: var(--accent); width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <div class="egg-icon" style="--hue: ${hue}deg; font-size: 60px;">🥚</div>
+          </div>
+          <div style="font-weight: 700; margin: 20px 0 12px; color: var(--text); text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-map-marker-alt" style="color: var(--danger);"></i> Where to Find
+          </div>
+          <div style="max-height: 250px; overflow-y: auto; padding-right: 5px;" class="custom-scroll">
+            ${locationHtml}
+          </div>
+        </div>`,
+    });
+  }
+
+  async function openSettings() {
+    const res = await Swal.fire({
+      title: "Settings",
+      showDenyButton: true,
       showCancelButton: true,
-      confirmButtonColor: "#ff7675", 
-      cancelButtonColor: "#b2e2f2",
-      confirmButtonText: "Yes, reset everything!",
+      confirmButtonText: "Check All",
+      denyButtonText: "Reset All",
+      cancelButtonText: "Close",
+      confirmButtonColor: "#b2e2f2",
+      denyButtonColor: "#ffcf96",
       customClass: {
         popup: isDarkMode ? "dark-mode" : "",
       },
+      background: isDarkMode ? "var(--card)" : "#ffffff",
+      color: "var(--text)",
     });
 
-    if (confirmReset.isConfirmed) {
-      for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 0;
-      hasCelebrated = false;
-      render();
-      Swal.fire("Reset!", "Your inventory has been cleared.", "success");
+    if (res.isConfirmed) {
+      const confirmCheck = await Swal.fire({
+        title: "Are you sure?",
+        text: "This will mark all 100 eggs as collected!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#b2e2f2",
+        confirmButtonText: "Yes, check all",
+      });
+      if (confirmCheck.isConfirmed) {
+        for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 1;
+        render();
+        Swal.fire("Updated!", "All eggs marked as collected.", "success");
+      }
+    } else if (res.isDenied) {
+      const confirmReset = await Swal.fire({
+        title: "Reset All Progress?",
+        text: "You will lose all your tracked eggs. This cannot be undone!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#ff7675",
+        cancelButtonColor: "#b2e2f2",
+        confirmButtonText: "Yes, reset everything!",
+        customClass: {
+          popup: isDarkMode ? "dark-mode" : "",
+        },
+      });
+      if (confirmReset.isConfirmed) {
+        for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 0;
+        hasCelebrated = false;
+        render();
+        Swal.fire("Reset!", "Your inventory has been cleared.", "success");
+      }
     }
   }
-}
 
-      checkFirstTime();
-      render();
-
-    </script>
+  checkFirstTime();
+  render();
+</script>
   </body>
 </html>
