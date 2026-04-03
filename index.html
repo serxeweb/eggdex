@@ -93,11 +93,11 @@
       </div>
     </header>
 
-    <div id="captureZone" class="page">
+    <div id="captureZone" class="page visible">
       <div class="grid" id="eggGrid"></div>
     </div>
 
-    <div id="locationZone" class="page"></div>
+    <div id="locationZone" class="page hidden" style="display: none;"></div>
 
     <button class="assistant-btn" onclick="toggleViewMode()">
       <img
@@ -187,36 +187,50 @@
           : "fas fa-moon header-icon";
       }
 
-      function toggleViewMode() {
+  function toggleViewMode() {
   const dex = document.getElementById("captureZone");
   const loc = document.getElementById("locationZone");
+  const dexControls = document.getElementById("dexControls");
+  const locControls = document.getElementById("locControls");
 
-  if (viewMode === "dex") {
-    viewMode = "loc";
+  // Toggle mode
+  viewMode = viewMode === "dex" ? "loc" : "dex";
 
+  if (viewMode === "loc") {
+    // 1. Start fading out Dex
     dex.classList.add("hidden");
+    dex.classList.remove("visible");
+    dexControls.style.display = "none";
 
+    // 2. Prepare Location Zone
+    loc.style.display = "block"; // Ensure it exists in DOM
+    render(); // Draw the eggs into the zone
+
+    // 3. Fade in Loc
     setTimeout(() => {
       loc.classList.remove("hidden");
-      render();
-    }, 200);
+      loc.classList.add("visible");
+      locControls.style.display = "block";
+    }, 50);
   } else {
-    viewMode = "dex";
-
+    // 1. Start fading out Loc
     loc.classList.add("hidden");
+    loc.classList.remove("visible");
+    locControls.style.display = "none";
 
+    // 2. Prepare Dex
+    dex.style.display = "block";
+    render();
+
+    // 3. Fade in Dex
     setTimeout(() => {
       dex.classList.remove("hidden");
-      render();
-    }, 200);
+      dex.classList.add("visible");
+      dexControls.style.display = "block";
+    }, 50);
   }
 
-  document.getElementById("dexControls").style.display =
-    viewMode === "dex" ? "block" : "none";
-
-  document.getElementById("locControls").style.display =
-    viewMode === "loc" ? "block" : "none";
-
+  // Update Footer Icon
   document.getElementById("viewIcon").src =
     viewMode === "dex"
       ? "./assets/img/location_icon.png"
