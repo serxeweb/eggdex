@@ -15,6 +15,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -337,16 +338,64 @@
         render();
       }
 
-      function updateStats() {
-        const uniqueCollected = Object.values(eggData).filter(
-          (count) => count > 0,
-        ).length;
-        const totalSum = Object.values(eggData).reduce((a, b) => a + b, 0);
-        const percent = Math.round((uniqueCollected / totalUniqueEggs) * 100);
-        document.getElementById("progressBar").style.width = percent + "%";
-        document.getElementById("progressPercent").innerText = percent + "%";
-        document.getElementById("totalEggsCount").innerText = totalSum;
-      }
+      // Add this variable at the top of your script to prevent 
+// confetti from firing every time you click + after you're already done.
+let hasCelebrated = false;
+
+function updateStats() {
+  const uniqueCollected = Object.values(eggData).filter(
+    (count) => count > 0,
+  ).length;
+  
+  const totalSum = Object.values(eggData).reduce((a, b) => a + b, 0);
+  const percent = Math.round((uniqueCollected / totalUniqueEggs) * 100);
+  
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("progressPercent").innerText = percent + "%";
+  document.getElementById("totalEggsCount").innerText = totalSum;
+
+  // --- CELEBRATION LOGIC ---
+  if (percent === 100 && !hasCelebrated) {
+    fireCelebration();
+    hasCelebrated = true; // Prevents spamming confetti
+  } else if (percent < 100) {
+    hasCelebrated = false; // Reset if they lose an egg/reset data
+  }
+}
+
+function fireCelebration() {
+  // Professional multi-burst confetti
+  const duration = 3 * 1000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.6 },
+      colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.6 },
+      colors: ['#ffb7ce', '#b2e2f2', '#ffcf96']
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+
+  Swal.fire({
+    title: 'Egg Master!',
+    text: 'Congratulations! You have collected all 100 eggs!',
+    icon: 'success',
+    confirmButtonColor: '#ffb7ce'
+  });
+}
 
       function setFilter(f, btn) {
         currentFilter = f;
