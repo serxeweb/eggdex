@@ -358,56 +358,45 @@
         }
       }
 
-      function renderLocations() {
+     function renderLocations() {
         const zone = document.getElementById("locationZone");
+        
+        // SAVE SCROLL POSITIONS: Map area names to their current scrollLeft value
+        const scrollPositions = {};
+        zone.querySelectorAll('.location-block').forEach(block => {
+          const name = block.querySelector('h3').innerText;
+          const slider = block.querySelector('.egg-slider');
+          if (slider) scrollPositions[name] = slider.scrollLeft;
+        });
 
         zone.innerHTML = "";
 
         areaData.forEach((area) => {
           const totalInCat = area.eggs.length;
-
           const ownedInCat = area.eggs.filter((id) => eggData[id] > 0).length;
-
           const missingInCat = totalInCat - ownedInCat;
 
           const block = document.createElement("div");
-
           block.className = "location-block";
-
           block.innerHTML = `
-
-      <div class="location-header">
-
-        <img src="${area.img}" class="location-img" alt="${area.name}">
-
-        <div class="location-text">
-
-          <h3>${area.name}</h3>
-
-          <p>${area.desc}</p>
-
-          <div class="category-stats">
-
-            <span class="badge badge-total">Total: ${totalInCat}</span>
-
-            <span class="badge badge-owned">Owned: ${ownedInCat}</span>
-
-            <span class="badge badge-missing">Missing: ${missingInCat}</span>
-
-          </div>
-
-        </div>
-
-      </div>`;
+            <div class="location-header">
+              <img src="${area.img}" class="location-img" alt="${area.name}">
+              <div class="location-text">
+                <h3>${area.name}</h3>
+                <p>${area.desc}</p>
+                <div class="category-stats">
+                  <span class="badge badge-total">Total: ${totalInCat}</span>
+                  <span class="badge badge-owned">Owned: ${ownedInCat}</span>
+                  <span class="badge badge-missing">Missing: ${missingInCat}</span>
+                </div>
+              </div>
+            </div>`;
 
           const slider = document.createElement("div");
-
           slider.className = "egg-slider";
-
           slider.onwheel = (e) => {
             if (e.deltaY !== 0) {
               e.preventDefault();
-
               slider.scrollLeft += e.deltaY;
             }
           };
@@ -417,43 +406,35 @@
           });
 
           block.appendChild(slider);
-
           zone.appendChild(block);
+
+          // RESTORE SCROLL POSITION: Apply the saved value back to the new slider
+          if (scrollPositions[area.name]) {
+            // requestAnimationFrame ensures the DOM is painted before we scroll
+            requestAnimationFrame(() => {
+              slider.scrollLeft = scrollPositions[area.name];
+            });
+          }
         });
 
+        // Add the disclaimer at the bottom
         const disclaimer = document.createElement("div");
-
         disclaimer.className = "disclaimer-card";
-
         disclaimer.innerHTML = `
-
-    <div style="margin-bottom: 8px;">
-
-      <i class="fas fa-exclamation-triangle"></i> 
-
-      Note: These egg locations are based on the 2025 Hunt. 
-
-    </div>
-
-    <a href="https://www.youtube.com/watch?v=EpSWCxWuVto" target="_blank" 
-
-       style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px 12px; border-radius: 10px; margin-bottom: 8px;">
-
-       <i class="fab fa-youtube" style="color: #ff0000;"></i> 
-
-       View 2025 Source Guide
-
-    </a>
-
-    <br>
-
-    <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
-
-  `;
-
+          <div style="margin-bottom: 8px;">
+            <i class="fas fa-exclamation-triangle"></i> 
+            Note: These egg locations are based on the 2025 Hunt. 
+          </div>
+          <a href="https://www.youtube.com/watch?v=EpSWCxWuVto" target="_blank" 
+             style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px 12px; border-radius: 10px; margin-bottom: 8px;">
+             <i class="fab fa-youtube" style="color: #ff0000;"></i> 
+             View 2025 Source Guide
+          </a>
+          <br>
+          <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
+        `;
         zone.appendChild(disclaimer);
       }
-
       function render() {
         if (viewMode === "dex") renderDex();
         else renderLocations();
