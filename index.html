@@ -389,7 +389,7 @@
       updateProfileUI();
     }
   }
-  function copyTradeText() {
+ function copyTradeText() {
   let missing = [];
   let extras = [];
   let owned = [];
@@ -413,7 +413,7 @@
     let parts = [];
     if (extras.length > 0) parts.push(`Extra:#${extras.join(",")}`);
     if (missing.length > 0) parts.push(`Need:#${missing.join(",")}`);
-    textToCopy = parts.join(" "); // Space only between categories
+    textToCopy = parts.join(" "); 
   } 
   else if (currentFilter === "collected") {
     textToCopy = owned.length > 0 ? `Have:#${owned.join(",")}` : "";
@@ -426,30 +426,58 @@
   }
 
   if (!textToCopy) {
-    Swal.fire("Empty!", "No eggs found for this category.", "info");
+    Swal.fire({
+      title: "Empty!",
+      text: "No eggs found for this category.",
+      icon: "info",
+      background: isDarkMode ? "#2d3436" : "#ffffff",
+      color: isDarkMode ? "#dfe6e9" : "#2d3436",
+      confirmButtonColor: "#ffb7ce"
+    });
     return;
   }
 
   const charCount = textToCopy.length;
   const isTooLong = charCount > 255;
+  
+  // Theme-aware colors for the popup
+  const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
+  const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
+  const boxColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
 
   Swal.fire({
     title: isTooLong ? "List is too long!" : "Ready to Copy",
+    background: bgColor,
+    color: textColor,
     html: `
-      <div style="font-size:0.75rem; margin-bottom:10px; word-break:break-all; background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; color:var(--text); border:1px solid rgba(0,0,0,0.1);">
+      <div style="
+        font-size: 0.85rem; 
+        margin-bottom: 15px; 
+        word-break: break-all; 
+        background: ${boxColor}; 
+        padding: 12px; 
+        border-radius: 10px; 
+        color: ${textColor}; 
+        border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"};
+        text-align: left;
+        font-family: 'Fredoka', sans-serif;
+      ">
         ${textToCopy}
       </div>
-      <div style="font-weight:bold; font-size:0.9rem; color:${isTooLong ? '#ff7675' : '#55efc4'}">
+      <div style="font-weight: 700; font-size: 1rem; color: ${isTooLong ? '#ff7675' : '#55efc4'}">
         Characters: ${charCount} / 255
       </div>
-      ${isTooLong ? '<p style="font-size:0.75rem; color:#ff7675; margin-top:5px;">⚠️ This will be cut off in Graal chat!</p>' : ''}
+      ${isTooLong ? '<p style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600;">⚠️ This will be cut off in Graal chat!</p>' : ''}
     `,
     icon: isTooLong ? "warning" : "info",
     showCancelButton: true,
     confirmButtonText: isTooLong ? "Copy Anyway" : "Copy to Clipboard",
     cancelButtonText: "Cancel",
     confirmButtonColor: "#ffb7ce",
-    cancelButtonColor: "#ccc",
+    cancelButtonColor: isDarkMode ? "#636e72" : "#ccc",
+    customClass: {
+      popup: isDarkMode ? "dark-mode" : ""
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       navigator.clipboard.writeText(textToCopy);
@@ -459,7 +487,9 @@
         position: "top-end",
         timer: 2000,
         showConfirmButton: false,
-        icon: "success"
+        icon: "success",
+        background: bgColor,
+        color: textColor
       });
     }
   });
