@@ -26,6 +26,7 @@
     <header>
       <div class="profile-card">
         <div class="header-actions">
+          <i class="fas fa-globe header-icon" title="Language" onclick="openLanguageMenu()"></i>
           <i
             class="fas fa-question-circle header-icon"
             title="Assistant"
@@ -118,7 +119,79 @@
     name: "",
   };
   let isDarkMode = localStorage.getItem("darkMode") === "true";
+// 1. Load language from storage or default to English
+let currentLang = localStorage.getItem("eggLang") || "en";
 
+const translations = {
+  en: {
+    all: "All", owned: "Owned", missing: "Missing", extras: "Extras",
+    copy: "Copy List", snap: "Screenshot", total: "Total",
+    extra: "Extra", need: "Need", have: "Have",
+    copied: "Copied!", empty: "No eggs found!"
+  },
+  pt: {
+    all: "Tudo", owned: "Possuído", missing: "Faltando", extras: "Extras",
+    copy: "Copiar Lista", snap: "Captura", total: "Total",
+    extra: "Extra", need: "Preciso", have: "Tenho",
+    copied: "Copiado!", empty: "Nenhum ovo encontrado!"
+  },
+  es: {
+    all: "Todo", owned: "Propio", missing: "Faltante", extras: "Extras",
+    copy: "Copiar Lista", snap: "Captura", total: "Total",
+    extra: "Extra", need: "Necesito", have: "Tengo",
+    copied: "¡Copiado!", empty: "¡No se encontraron huevos!"
+  }
+};
+
+// 2. Function to switch language via Modal
+async function openLanguageMenu() {
+  const { value: lang } = await Swal.fire({
+    title: 'Select Language',
+    input: 'radio',
+    inputOptions: {
+      'en': 'English',
+      'pt': 'Português',
+      'es': 'Español'
+    },
+    inputValue: currentLang,
+    confirmButtonColor: "#ffb7ce",
+    background: isDarkMode ? "#2d3436" : "#ffffff",
+    color: isDarkMode ? "#dfe6e9" : "#2d3436",
+  });
+
+  if (lang) {
+    currentLang = lang;
+    localStorage.setItem("eggLang", lang); // THIS SAVES IT FOREVER
+    updateLanguageUI();
+  }
+}
+
+// 3. Function to apply the text to the UI
+function updateLanguageUI() {
+  const t = translations[currentLang];
+  
+  // Update Filter Buttons (By Index)
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  if(filterBtns.length >= 4) {
+    filterBtns[0].innerText = t.all;
+    filterBtns[1].innerText = t.owned;
+    filterBtns[2].innerText = t.missing;
+    filterBtns[3].innerText = t.extras;
+  }
+
+  // Update Action Buttons
+  document.querySelector(".copy-btn").innerHTML = `<i class="fas fa-copy"></i> ${t.copy}`;
+  document.querySelector(".snap-btn").innerHTML = `<i class="fas fa-camera"></i> ${t.snap}`;
+  
+  // Update Total Text
+  const totalLabel = document.querySelector(".total-counter");
+  if(totalLabel) {
+    totalLabel.childNodes[0].textContent = t.total + ": ";
+  }
+}
+
+// 4. IMPORTANT: Call this at the bottom of your script so it runs on refresh!
+updateLanguageUI();
   const areaData = [{
       name: "Spawn Eggs",
       desc: "Common eggs that appear around the map.",
