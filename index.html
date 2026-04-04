@@ -438,7 +438,7 @@
   }
 
   const charCount = textToCopy.length;
-  const isTooLong = charCount > 255;
+  const isTooLong = charCount > 99;
   
   // Theme-aware colors for the popup
   const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
@@ -465,7 +465,7 @@
         ${textToCopy}
       </div>
       <div style="font-weight: 700; font-size: 1rem; color: ${isTooLong ? '#ff7675' : '#55efc4'}">
-        Characters: ${charCount} / 255
+        Characters: ${charCount} / 99
       </div>
       ${isTooLong ? '<p style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600;">⚠️ This will be cut off in Graal chat!</p>' : ''}
     `,
