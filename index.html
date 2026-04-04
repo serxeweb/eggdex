@@ -580,154 +580,115 @@
       }
 
       function copyTradeText() {
-        let missing = [];
-        let extras = [];
-        let owned = [];
+  let missing = [], extras = [], owned = [];
+  for (let i = 1; i <= totalUniqueEggs; i++) {
+    if (eggData[i] === 0) missing.push(i);
+    else {
+      owned.push(i);
+      if (eggData[i] > 1) extras.push(i);
+    }
+  }
 
-        // Categorize eggs
-        for (let i = 1; i <= totalUniqueEggs; i++) {
-          if (eggData[i] === 0) {
-            missing.push(i);
-          } else {
-            owned.push(i);
-            if (eggData[i] > 1) {
-              extras.push(i);
-            }
-          }
-        }
-
-        const formatRange = (nums) => {
-          if (nums.length === 0) return "";
-          nums.sort((a, b) => a - b);
-          let result = [];
-          let start = nums[0];
-          let end = nums[0];
-          for (let i = 1; i <= nums.length; i++) {
-            if (i < nums.length && nums[i] === end + 1) {
-              end = nums[i];
-            } else {
-              if (start === end) {
-                result.push(start);
-              } else {
-                result.push(`${start}-${end}`);
-              }
-              if (i < nums.length) {
-                start = end = nums[i];
-              }
-            }
-          }
-          return result.join(",");
-        };
-
-        let textToCopy = "";
-        let emptyTitle = "Empty List";
-        let emptyMsg = "No eggs found for this category.";
-        let emptyIcon = "info";
-
-        if (currentFilter === "all") {
-          let parts = [];
-          if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
-          if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
-          textToCopy = parts.join(" ");
-          if (!textToCopy && owned.length === totalUniqueEggs) {
-            emptyTitle = "Congratulations!";
-            emptyMsg = "Your EggDex is 100% complete! Great job!";
-            emptyIcon = "success";
-          }
-        } else if (currentFilter === "collected") {
-          textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
-          if (!textToCopy) emptyMsg = "Your collection is empty. Time to hunt!";
-        } else if (currentFilter === "missing") {
-          textToCopy = missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
-          if (!textToCopy && owned.length === totalUniqueEggs) {
-            emptyTitle = "Hunt Complete!";
-            emptyMsg = "You aren't missing any eggs!";
-            emptyIcon = "success";
-          }
-        } else if (currentFilter === "duplicates") {
-          textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
-          if (!textToCopy) emptyMsg = "No extra eggs to trade right now.";
-        }
-
-        if (!textToCopy) {
-          Swal.fire({
-            title: emptyTitle,
-            text: emptyMsg,
-            icon: emptyIcon,
-            background: isDarkMode ? "#2d3436" : "#ffffff",
-            color: isDarkMode ? "#dfe6e9" : "#2d3436",
-            confirmButtonColor: "#ffb7ce",
-          });
-          return;
-        }
-
-        const charCount = textToCopy.length;
-        const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
-        const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
-        const boxColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
-
-        // Show a prompt with a limit selector
-        Swal.fire({
-          title: "Ready to Copy",
-          background: bgColor,
-          color: textColor,
-          html: `
-            <div style="font-size: 0.85rem; margin-bottom: 15px; word-break: break-all; background: ${boxColor}; padding: 12px; border-radius: 10px; color: ${textColor}; border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"}; text-align: left; font-family: 'Fredoka', sans-serif;">
-              ${textToCopy}
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 0.8rem; opacity: 0.8;">Chat Type: </label>
-                <select id="chatLimit" style="padding: 5px; border-radius: 5px; background: ${boxColor}; color: ${textColor}; border: 1px solid #ffb7ce;" onchange="updateCharWarning(${charCount})">
-                    <option value="99">Public Chat (99)</option>
-                    <option value="255" selected>Private/PM (255)</option>
-                </select>
-            </div>
-            <div id="charDisplay" style="font-weight: 700; font-size: 1rem; color: ${charCount > 255 ? "#ff7675" : "#55efc4"}">
-              Characters: ${charCount} / <span id="maxDisplay">255</span>
-            </div>
-            <p id="limitWarning" style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600; display: ${charCount > 255 ? 'block' : 'none'};">
-                ⚠️ Too long for this chat! It will be cut off.
-            </p>
-          `,
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonText: "Copy to Clipboard",
-          confirmButtonColor: "#ffb7ce",
-          cancelButtonColor: isDarkMode ? "#636e72" : "#ccc",
-          didOpen: () => {
-              // Initial check
-              window.updateCharWarning = (count) => {
-                  const limit = document.getElementById("chatLimit").value;
-                  const display = document.getElementById("charDisplay");
-                  const warning = document.getElementById("limitWarning");
-                  document.getElementById("maxDisplay").innerText = limit;
-                  
-                  if (count > limit) {
-                      display.style.color = "#ff7675";
-                      warning.style.display = "block";
-                  } else {
-                      display.style.color = "#55efc4";
-                      warning.style.display = "none";
-                  }
-              };
-              updateCharWarning(charCount);
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigator.clipboard.writeText(textToCopy);
-            Swal.fire({
-              title: "Copied!",
-              toast: true,
-              position: "top-end",
-              timer: 2000,
-              showConfirmButton: false,
-              icon: "success",
-              background: bgColor,
-              color: textColor,
-            });
-          }
-        });
+  const formatRange = (nums) => {
+    if (nums.length === 0) return "";
+    nums.sort((a, b) => a - b);
+    let result = [], start = nums[0], end = nums[0];
+    for (let i = 1; i <= nums.length; i++) {
+      if (i < nums.length && nums[i] === end + 1) end = nums[i];
+      else {
+        result.push(start === end ? start : `${start}-${end}`);
+        if (i < nums.length) start = end = nums[i];
       }
+    }
+    return result.join(",");
+  };
+
+  let textToCopy = "";
+  let emptyTitle = "Empty List", emptyMsg = "No eggs found for this category.", emptyIcon = "info";
+
+  if (currentFilter === "all") {
+    let parts = [];
+    if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
+    if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
+    textToCopy = parts.join(" ");
+    if (!textToCopy && owned.length === totalUniqueEggs) {
+      emptyTitle = "Congratulations!";
+      emptyMsg = "Your EggDex is 100% complete! Great job!";
+      emptyIcon = "success";
+    }
+  } else if (currentFilter === "collected") {
+    textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
+    if (!textToCopy) emptyMsg = "Your collection is empty. Time to hunt!";
+  } else if (currentFilter === "missing") {
+    textToCopy = missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
+    if (!textToCopy && owned.length === totalUniqueEggs) {
+      emptyTitle = "Hunt Complete!";
+      emptyMsg = "You aren't missing any eggs!";
+      emptyIcon = "success";
+    }
+  } else if (currentFilter === "duplicates") {
+    textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
+    if (!textToCopy) emptyMsg = "No extra eggs to trade right now.";
+  }
+
+  if (!textToCopy) {
+    Swal.fire({
+      title: emptyTitle, text: emptyMsg, icon: emptyIcon,
+      background: isDarkMode ? "#2d3436" : "#ffffff",
+      color: isDarkMode ? "#dfe6e9" : "#2d3436",
+      confirmButtonColor: "#ffb7ce",
+    });
+    return;
+  }
+
+  const charCount = textToCopy.length;
+  const bgColor = isDarkMode ? "#1e272e" : "#ffffff";
+  const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
+  const boxColor = isDarkMode ? "rgba(255,255,255,0.05)" : "#f8f9fa";
+
+  // Badge Logic Colors
+  const publicOk = charCount <= 99;
+  const privateOk = charCount <= 255;
+
+  Swal.fire({
+    title: "Copy Trade List",
+    background: bgColor,
+    color: textColor,
+    showCancelButton: true,
+    confirmButtonText: "Copy to Clipboard",
+    confirmButtonColor: "#ffb7ce",
+    cancelButtonText: "Close",
+    html: `
+      <div style="text-align: left; font-family: 'Fredoka', sans-serif;">
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${publicOk ? '#55efc4' : '#ff7675'}; background: ${publicOk ? 'rgba(85, 239, 196, 0.1)' : 'rgba(255, 118, 117, 0.1)'};">
+            <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${publicOk ? '#55efc4' : '#ff7675'};">Public Chat</div>
+            <div style="font-weight: 700; font-size: 1rem; color: ${publicOk ? '#55efc4' : '#ff7675'};">${publicOk ? '✓ OK' : '✗ TOO LONG'}</div>
+          </div>
+          
+          <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${privateOk ? '#55efc4' : '#ff7675'}; background: ${privateOk ? 'rgba(85, 239, 196, 0.1)' : 'rgba(255, 118, 117, 0.1)'};">
+            <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${privateOk ? '#55efc4' : '#ff7675'};">Private / PM</div>
+            <div style="font-weight: 700; font-size: 1rem; color: ${privateOk ? '#55efc4' : '#ff7675'};">${privateOk ? '✓ OK' : '✗ TOO LONG'}</div>
+          </div>
+        </div>
+
+        <div style="background: ${boxColor}; padding: 15px; border-radius: 15px; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 15px;">
+           <div style="font-size: 0.9rem; word-break: break-all; line-height: 1.4; color: ${textColor};">${textToCopy}</div>
+        </div>
+
+        <div style="text-align: center; font-size: 0.85rem; opacity: 0.8;">
+           Total: <strong>${charCount}</strong> characters
+        </div>
+      </div>
+    `
+  }).then((result) => {
+    if (result.isConfirmed) {
+      navigator.clipboard.writeText(textToCopy);
+      Swal.fire({ title: "Copied!", toast: true, position: "top-end", timer: 2000, showConfirmButton: false, icon: "success" });
+    }
+  });
+}
 
       function updateProfileUI() {
         document.getElementById("displayUser").innerText = userData.name;
