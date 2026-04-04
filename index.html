@@ -417,65 +417,61 @@
     });
   }
 
-  function copyTradeText() {
+function copyTradeText() {
   let missing = [];
   let extras = [];
   let owned = [];
 
-  // Categorize eggs
+  // Categorize eggs (storing just the numbers)
   for (let i = 1; i <= totalUniqueEggs; i++) {
     if (eggData[i] === 0) {
-      missing.push(`#${i}`);
+      missing.push(i);
     } else {
-      owned.push(`#${i}`);
+      owned.push(i);
       if (eggData[i] > 1) {
-        extras.push(`#${i}`);
+        extras.push(i);
       }
     }
   }
 
   let textToCopy = "";
 
-  // Logic based on the current active filter
+
   if (currentFilter === "all") {
-    // Format: Extra:#2,#5 Need:#2,#5
     let parts = [];
-    if (extras.length > 0) parts.push(`Extra:${extras.join(",")}`);
-    if (missing.length > 0) parts.push(`Need:${missing.join(",")}`);
+    if (extras.length > 0) parts.push(`Extra:#${extras.join(",")}`);
+    if (missing.length > 0) parts.push(`Need:#${missing.join(",")}`);
     textToCopy = parts.join(" ");
   } 
   else if (currentFilter === "collected") {
-    // Format: Have:#2,#5
-    textToCopy = owned.length > 0 ? `Have:${owned.join(",")}` : "";
+    textToCopy = owned.length > 0 ? `Have:#${owned.join(",")}` : "";
   } 
   else if (currentFilter === "missing") {
-    // Format: Need:#2,#5
-    textToCopy = missing.length > 0 ? `Need:${missing.join(",")}` : "";
+    textToCopy = missing.length > 0 ? `Need:#${missing.join(",")}` : "";
   } 
   else if (currentFilter === "duplicates") {
-    // Format: Extra:#2,#5
-    textToCopy = extras.length > 0 ? `Extra:${extras.join(",")}` : "";
+    textToCopy = extras.length > 0 ? `Extra:#${extras.join(",")}` : "";
   }
 
-  // Copy to clipboard
   if (textToCopy) {
+    const charCount = textToCopy.length;
     navigator.clipboard.writeText(textToCopy);
+
+    
     Swal.fire({
-      title: "Copied!",
-      text: textToCopy,
-      toast: true,
-      position: "top-end",
-      timer: 2000,
-      showConfirmButton: false,
-      icon: "success",
-    });
-  } else {
-    Swal.fire({
-      title: "Empty!",
-      text: "No eggs found for this category.",
-      icon: "info",
+      title: charCount > 255 ? "Warning: Too Long!" : "Copied!",
+      html: `
+        <div style="font-size:0.8rem; margin-bottom:10px; word-break:break-all; background:#eee; padding:10px; border-radius:5px; color:#333;">${textToCopy}</div>
+        <div style="font-weight:bold; color:${charCount > 255 ? 'red' : 'green'}">
+          Characters: ${charCount} / 255
+        </div>
+        ${charCount > 255 ? '<p style="font-size:0.7rem; color:red;">This exceeds Graal\'s chat limit and will be cut off!</p>' : ''}
+      `,
+      icon: charCount > 255 ? "warning" : "success",
       confirmButtonColor: "#ffb7ce"
     });
+  } else {
+    Swal.fire("Empty!", "No eggs found for this category.", "info");
   }
 }
   async function openAssistant() {
