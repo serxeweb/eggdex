@@ -389,6 +389,81 @@
       updateProfileUI();
     }
   }
+  function copyTradeText() {
+  let missing = [];
+  let extras = [];
+  let owned = [];
+
+  // Categorize eggs (storing just the numbers)
+  for (let i = 1; i <= totalUniqueEggs; i++) {
+    if (eggData[i] === 0) {
+      missing.push(i);
+    } else {
+      owned.push(i);
+      if (eggData[i] > 1) {
+        extras.push(i);
+      }
+    }
+  }
+
+  let textToCopy = "";
+
+  // Logic based on current filter with COMPACT formatting (#1,2,3)
+  if (currentFilter === "all") {
+    let parts = [];
+    if (extras.length > 0) parts.push(`Extra:#${extras.join(",")}`);
+    if (missing.length > 0) parts.push(`Need:#${missing.join(",")}`);
+    textToCopy = parts.join(" "); // Space only between categories
+  } 
+  else if (currentFilter === "collected") {
+    textToCopy = owned.length > 0 ? `Have:#${owned.join(",")}` : "";
+  } 
+  else if (currentFilter === "missing") {
+    textToCopy = missing.length > 0 ? `Need:#${missing.join(",")}` : "";
+  } 
+  else if (currentFilter === "duplicates") {
+    textToCopy = extras.length > 0 ? `Extra:#${extras.join(",")}` : "";
+  }
+
+  if (!textToCopy) {
+    Swal.fire("Empty!", "No eggs found for this category.", "info");
+    return;
+  }
+
+  const charCount = textToCopy.length;
+  const isTooLong = charCount > 255;
+
+  Swal.fire({
+    title: isTooLong ? "List is too long!" : "Ready to Copy",
+    html: `
+      <div style="font-size:0.75rem; margin-bottom:10px; word-break:break-all; background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; color:var(--text); border:1px solid rgba(0,0,0,0.1);">
+        ${textToCopy}
+      </div>
+      <div style="font-weight:bold; font-size:0.9rem; color:${isTooLong ? '#ff7675' : '#55efc4'}">
+        Characters: ${charCount} / 255
+      </div>
+      ${isTooLong ? '<p style="font-size:0.75rem; color:#ff7675; margin-top:5px;">⚠️ This will be cut off in Graal chat!</p>' : ''}
+    `,
+    icon: isTooLong ? "warning" : "info",
+    showCancelButton: true,
+    confirmButtonText: isTooLong ? "Copy Anyway" : "Copy to Clipboard",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#ffb7ce",
+    cancelButtonColor: "#ccc",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      navigator.clipboard.writeText(textToCopy);
+      Swal.fire({
+        title: "Copied!",
+        toast: true,
+        position: "top-end",
+        timer: 2000,
+        showConfirmButton: false,
+        icon: "success"
+      });
+    }
+  });
+}
 
   function updateProfileUI() {
     document.getElementById("displayUser").innerText = userData.name;
@@ -417,63 +492,7 @@
     });
   }
 
-function copyTradeText() {
-  let missing = [];
-  let extras = [];
-  let owned = [];
 
-  // Categorize eggs (storing just the numbers)
-  for (let i = 1; i <= totalUniqueEggs; i++) {
-    if (eggData[i] === 0) {
-      missing.push(i);
-    } else {
-      owned.push(i);
-      if (eggData[i] > 1) {
-        extras.push(i);
-      }
-    }
-  }
-
-  let textToCopy = "";
-
-
-  if (currentFilter === "all") {
-    let parts = [];
-    if (extras.length > 0) parts.push(`Extra:#${extras.join(",")}`);
-    if (missing.length > 0) parts.push(`Need:#${missing.join(",")}`);
-    textToCopy = parts.join(" ");
-  } 
-  else if (currentFilter === "collected") {
-    textToCopy = owned.length > 0 ? `Have:#${owned.join(",")}` : "";
-  } 
-  else if (currentFilter === "missing") {
-    textToCopy = missing.length > 0 ? `Need:#${missing.join(",")}` : "";
-  } 
-  else if (currentFilter === "duplicates") {
-    textToCopy = extras.length > 0 ? `Extra:#${extras.join(",")}` : "";
-  }
-
-  if (textToCopy) {
-    const charCount = textToCopy.length;
-    navigator.clipboard.writeText(textToCopy);
-
-    
-    Swal.fire({
-      title: charCount > 255 ? "Warning: Too Long!" : "Copied!",
-      html: `
-        <div style="font-size:0.8rem; margin-bottom:10px; word-break:break-all; background:#eee; padding:10px; border-radius:5px; color:#333;">${textToCopy}</div>
-        <div style="font-weight:bold; color:${charCount > 255 ? 'red' : 'green'}">
-          Characters: ${charCount} / 255
-        </div>
-        ${charCount > 255 ? '<p style="font-size:0.7rem; color:red;">This exceeds Graal\'s chat limit and will be cut off!</p>' : ''}
-      `,
-      icon: charCount > 255 ? "warning" : "success",
-      confirmButtonColor: "#ffb7ce"
-    });
-  } else {
-    Swal.fire("Empty!", "No eggs found for this category.", "info");
-  }
-}
   async function openAssistant() {
     Swal.fire({
       title: "EggDex Guide & Privacy",
