@@ -389,12 +389,12 @@
       updateProfileUI();
     }
   }
- function copyTradeText() {
+function copyTradeText() {
   let missing = [];
   let extras = [];
   let owned = [];
 
-  // Categorize eggs (storing just the numbers)
+  // Categorize eggs
   for (let i = 1; i <= totalUniqueEggs; i++) {
     if (eggData[i] === 0) {
       missing.push(i);
@@ -406,23 +406,48 @@
     }
   }
 
+  // HELPER: Logic to turn [1, 2, 3, 5] into "1-3,5"
+  const formatRange = (nums) => {
+    if (nums.length === 0) return "";
+    nums.sort((a, b) => a - b);
+    let result = [];
+    let start = nums[0];
+    let end = nums[0];
+
+    for (let i = 1; i <= nums.length; i++) {
+      if (i < nums.length && nums[i] === end + 1) {
+        end = nums[i];
+      } else {
+        if (start === end) {
+          result.push(start);
+        } else {
+          result.push(`${start}-${end}`);
+        }
+        if (i < nums.length) {
+          start = end = nums[i];
+        }
+      }
+    }
+    return result.join(",");
+  };
+
   let textToCopy = "";
 
-  // Logic based on current filter with COMPACT formatting (#1,2,3)
+  // Apply the range logic based on current filter
   if (currentFilter === "all") {
     let parts = [];
-    if (extras.length > 0) parts.push(`Extra:#${extras.join(",")}`);
-    if (missing.length > 0) parts.push(`Need:#${missing.join(",")}`);
-    textToCopy = parts.join(" "); 
+    if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
+    if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
+    textToCopy = parts.join(" ");
   } 
   else if (currentFilter === "collected") {
-    textToCopy = owned.length > 0 ? `Have:#${owned.join(",")}` : "";
+    textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
   } 
   else if (currentFilter === "missing") {
-    textToCopy = missing.length > 0 ? `Need:#${missing.join(",")}` : "";
+    textToCopy = missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
   } 
   else if (currentFilter === "duplicates") {
-    textToCopy = extras.length > 0 ? `Extra:#${extras.join(",")}` : "";
+    textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
   }
 
   if (!textToCopy) {
@@ -438,9 +463,7 @@
   }
 
   const charCount = textToCopy.length;
-  const isTooLong = charCount > 99;
-  
-  // Theme-aware colors for the popup
+  const isTooLong = charCount > 255; // Changed back to Graal's actual 255 limit
   const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
   const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
   const boxColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
@@ -450,22 +473,11 @@
     background: bgColor,
     color: textColor,
     html: `
-      <div style="
-        font-size: 0.85rem; 
-        margin-bottom: 15px; 
-        word-break: break-all; 
-        background: ${boxColor}; 
-        padding: 12px; 
-        border-radius: 10px; 
-        color: ${textColor}; 
-        border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"};
-        text-align: left;
-        font-family: 'Fredoka', sans-serif;
-      ">
+      <div style="font-size: 0.85rem; margin-bottom: 15px; word-break: break-all; background: ${boxColor}; padding: 12px; border-radius: 10px; color: ${textColor}; border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"}; text-align: left; font-family: 'Fredoka', sans-serif;">
         ${textToCopy}
       </div>
       <div style="font-weight: 700; font-size: 1rem; color: ${isTooLong ? '#ff7675' : '#55efc4'}">
-        Characters: ${charCount} / 99
+        Characters: ${charCount} / 255
       </div>
       ${isTooLong ? '<p style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600;">⚠️ This will be cut off in Graal chat!</p>' : ''}
     `,
@@ -474,10 +486,7 @@
     confirmButtonText: isTooLong ? "Copy Anyway" : "Copy to Clipboard",
     cancelButtonText: "Cancel",
     confirmButtonColor: "#ffb7ce",
-    cancelButtonColor: isDarkMode ? "#636e72" : "#ccc",
-    customClass: {
-      popup: isDarkMode ? "dark-mode" : ""
-    }
+    cancelButtonColor: isDarkMode ? "#636e72" : "#ccc"
   }).then((result) => {
     if (result.isConfirmed) {
       navigator.clipboard.writeText(textToCopy);
