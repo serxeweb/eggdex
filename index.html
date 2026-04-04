@@ -420,21 +420,59 @@
   function copyTradeText() {
     let missing = [];
     let extras = [];
+    let owned = [];
+
+    // Categorize eggs
     for (let i = 1; i <= totalUniqueEggs; i++) {
-      if (eggData[i] === 0) missing.push(`#${i}`);
-      if (eggData[i] > 1) extras.push(`#${i}`);
+      if (eggData[i] === 0) {
+        missing.push(`#${i}`);
+      } else {
+        owned.push(`#${i}`);
+        if (eggData[i] > 1) {
+          extras.push(`#${i}`);
+        }
+      }
     }
-    navigator.clipboard.writeText(`NEED:${missing.join(",")} EXTRAS:${extras.join(",")}`);
+
+    let textToCopy = "";
+
+
+    if (currentFilter === "all") {
+    
+      textToCopy = `Extra: ${extras.join(", ")} | Need: ${missing.join(", ")}`;
+    } 
+    else if (currentFilter === "collected") {
+    
+      textToCopy = `Have: ${owned.join(", ")}`;
+    } 
+    else if (currentFilter === "missing") {
+      
+      textToCopy = `Need: ${missing.join(", ")}`;
+    } 
+    else if (currentFilter === "duplicates") {
+      
+      textToCopy = `Extra: ${extras.join(", ")}`;
+    }
+
+    
+    if (textToCopy.includes(": ")) {
+        const parts = textToCopy.split(" | ");
+        const filteredParts = parts.filter(p => !p.endsWith(": "));
+        textToCopy = filteredParts.join(" | ");
+    }
+
+    navigator.clipboard.writeText(textToCopy);
+
     Swal.fire({
-      title: "Copied!",
+      title: "Copied to Clipboard!",
+      text: textToCopy || "Nothing to list!",
       toast: true,
       position: "top-end",
-      timer: 2000,
+      timer: 3000,
       showConfirmButton: false,
       icon: "success",
     });
   }
-
   async function openAssistant() {
     Swal.fire({
       title: "EggDex Guide & Privacy",
