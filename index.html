@@ -946,32 +946,11 @@
 
 
 function update(id, change) {
-        const zone = document.getElementById("locationZone");
-        
-        // 1. If we are in location mode, lock the current height so the page doesn't jump
-        if (viewMode === "loc") {
-          zone.style.minHeight = zone.offsetHeight + "px";
-        }
-
-        const scrollPos = window.scrollY;
-        
-        // 2. Update the data
-        eggData[id] = Math.max(0, eggData[id] + change);
-
-        // 3. Re-render the UI
-        render();
-
-        // 4. Restore scroll and then unlock the height
-        if (viewMode === "loc") {
-          window.scrollTo(0, scrollPos);
-          
-          // Use a tiny timeout to ensure the browser has finished the scroll
-          setTimeout(() => {
-            zone.style.minHeight = ""; 
-          }, 0);
-        }
-      }
-
+  const scrollPos = window.scrollY; // 1. Remember where you are
+  eggData[id] = Math.max(0, eggData[id] + change); // 2. Change the number
+  render(); // 3. Redraw the UI
+  window.scrollTo(0, scrollPos); // 4. Jump back instantly
+}
 
 
       let hasCelebrated = false;
