@@ -945,9 +945,14 @@
       }
 
 
+function update(id, change) {
+        const zone = document.getElementById("locationZone");
+        
+        // 1. If we are in location mode, lock the current height so the page doesn't jump
+        if (viewMode === "loc") {
+          zone.style.minHeight = zone.offsetHeight + "px";
+        }
 
-    function update(id, change) {
-        // 1. Save current scroll position
         const scrollPos = window.scrollY;
         
         // 2. Update the data
@@ -956,14 +961,14 @@
         // 3. Re-render the UI
         render();
 
-        // 4. Force the scroll back after the browser finishes rendering
+        // 4. Restore scroll and then unlock the height
         if (viewMode === "loc") {
-          requestAnimationFrame(() => {
-            window.scrollTo({
-              top: scrollPos,
-              behavior: 'instant' // prevents "bouncing" animation
-            });
-          });
+          window.scrollTo(0, scrollPos);
+          
+          // Use a tiny timeout to ensure the browser has finished the scroll
+          setTimeout(() => {
+            zone.style.minHeight = ""; 
+          }, 0);
         }
       }
 
