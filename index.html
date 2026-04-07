@@ -316,38 +316,31 @@
       }
 
       function createEggCard(i) {
-        const count = eggData[i];
+  const count = eggData[i];
+  const hue = (i * 137.5) % 360;
+  const card = document.createElement("div");
+  
+  // ADD THIS LINE: This gives the card a searchable identity
+  card.setAttribute('data-egg-id', i); 
 
-        const hue = (i * 137.5) % 360;
+  card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
+  card.onclick = (e) => {
+    if (!e.target.closest(".qty-btn")) {
+      showEggDetails(i);
+    }
+  };
 
-        const card = document.createElement("div");
+  card.innerHTML = `
+    <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
+    <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
+    <div class="qty-controls">
+      <button class="qty-btn" onclick="update(${i}, -1)">-</button>
+      <span class="qty-display" style="font-weight:800">${count}</span>
+      <button class="qty-btn" onclick="update(${i}, 1)">+</button>
+    </div>`;
 
-        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
-
-        card.onclick = (e) => {
-          if (!e.target.closest(".qty-btn")) {
-            showEggDetails(i);
-          }
-        };
-
-        card.innerHTML = `
-
-          <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
-
-          <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
-
-          <div class="qty-controls">
-
-            <button class="qty-btn" onclick="update(${i}, -1)">-</button>
-
-            <span style="font-weight:800">${count}</span>
-
-            <button class="qty-btn" onclick="update(${i}, 1)">+</button>
-
-          </div>`;
-
-        return card;
-      }
+  return card;
+}
 
       function renderDex() {
         const grid = document.getElementById("eggGrid");
@@ -474,36 +467,38 @@
 
       // Replace your existing update function with this:
 function update(id, change) {
+  // 1. Update Data
   eggData[id] = Math.max(0, eggData[id] + change);
-  
-  // Save data
   localStorage.setItem("eggInventory", JSON.stringify(eggData));
   
-  // Update stats at the top
+  // 2. Update Stats (Top bar)
   updateStats();
 
+  // 3. Update UI without jumping
   if (viewMode === "dex") {
-     
-      if (currentFilter !== 'all') {
-          const scrollPos = window.scrollY;
-          renderDex();
-          window.scrollTo(0, scrollPos);
-      } else {
-        
-          const cards = document.querySelectorAll('.egg-card');
-        
-          const card = cards[id - 1]; 
-          if (card) {
-              card.className = `egg-card ${eggData[id] > 0 ? "has-any" : "is-missing"}`;
-              card.querySelector('span[style*="font-weight:800"]').innerText = eggData[id];
-          }
+    // If a filter is active, we must re-render because the card might need to disappear
+    if (currentFilter !== 'all') {
+      const scrollPos = window.pageYOffset;
+      renderDex();
+      window.scrollTo(0, scrollPos);
+    } else {
+      // IF "ALL" IS SELECTED: Find the specific card and update just that one
+      const card = document.querySelector(`.egg-card[data-egg-id="${id}"]`);
+      if (card) {
+        const count = eggData[id];
+        // Update the visual class (color)
+        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
+        // Update the number text
+        const display = card.querySelector('.qty-display');
+        if (display) display.innerText = count;
       }
+    }
   } else {
- 
-      const locZone = document.getElementById("locationZone");
-      const scrollPos = locZone.scrollTop;
-      renderLocations();
-      locZone.scrollTop = scrollPos;
+    // Location Mode Logic
+    const locZone = document.getElementById("locationZone");
+    const scrollPos = locZone.scrollTop;
+    renderLocations();
+    locZone.scrollTop = scrollPos;
   }
 }
 
