@@ -945,12 +945,13 @@
       }
 
 
-function update(id, change) {
-  const scrollPos = window.scrollY; // 1. Remember where you are
-  eggData[id] = Math.max(0, eggData[id] + change); // 2. Change the number
-  render(); // 3. Redraw the UI
-  window.scrollTo(0, scrollPos); // 4. Jump back instantly
-}
+
+      function update(id, change) {
+        eggData[id] = Math.max(0, eggData[id] + change);
+
+        render();
+      }
+
 
 
       let hasCelebrated = false;
