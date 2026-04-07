@@ -367,19 +367,21 @@
   width: 100%;
 }
 
-.page.hidden {
+.page {
+ 
   opacity: 0;
   transform: translateY(15px);
   pointer-events: none;
-  /* Instead of absolute, we use height 0 to prevent the screen from jumping */
   height: 0;
   overflow: hidden;
   visibility: hidden;
 }
 
 .page.visible {
+
   opacity: 1;
   transform: translateY(0);
   height: auto;
   visibility: visible;
+  pointer-events: auto;
 }
