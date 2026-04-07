@@ -125,7 +125,7 @@
       <div class="grid" id="eggGrid"></div>
     </div>
 
-    <div id="locationZone" class="page hidden" style="display: none"></div>
+    <div id="locationZone" class="page hidden" ></div>
 
     <button class="assistant-btn" onclick="toggleViewMode()">
       <img
@@ -259,41 +259,41 @@
           ? "fas fa-sun header-icon"
           : "fas fa-moon header-icon";
       }
-
-      function toggleViewMode() {
+function toggleViewMode() {
   const dex = document.getElementById("captureZone");
   const loc = document.getElementById("locationZone");
   const dexControls = document.getElementById("dexControls");
   const locControls = document.getElementById("locControls");
 
+
   viewMode = viewMode === "dex" ? "loc" : "dex";
 
   if (viewMode === "loc") {
-    // Hide Dex
+  
     dex.classList.replace("visible", "hidden");
     dexControls.style.display = "none";
     
-    // Show Locations
+    
     loc.classList.replace("hidden", "visible");
     locControls.style.display = "block";
-    renderLocations(); 
+    renderLocations();
   } else {
-    // Hide Locations
+   
     loc.classList.replace("visible", "hidden");
     locControls.style.display = "none";
     
-    // Show Dex
+  
     dex.classList.replace("hidden", "visible");
     dexControls.style.display = "block";
-    renderDex();
+    renderDex(); 
   }
 
+  
   document.getElementById("viewIcon").src =
     viewMode === "dex"
       ? "./assets/img/location_icon.png"
       : "./assets/img/egg_icon.png";
 }
-
       function createEggCard(i) {
         const count = eggData[i];
 
