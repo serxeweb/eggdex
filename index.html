@@ -946,11 +946,53 @@
 
 
 
-      function update(id, change) {
-        eggData[id] = Math.max(0, eggData[id] + change);
+ // 1. Updated update function
+function update(id, change) {
+  eggData[id] = Math.max(0, eggData[id] + change);
+  
+  // Save data immediately
+  localStorage.setItem("eggInventory", JSON.stringify(eggData));
+  updateStats();
 
-        render();
+  if (viewMode === "dex") {
+    // In Dex mode, we usually need a full render because of filters (Owned/Missing)
+    render();
+  } else {
+    // In Location mode, we only update the specific elements to keep scroll position
+    updateSpecificLocationUI(id);
+  }
+}
+
+// 2. New helper to update numbers without refreshing the whole page
+function updateSpecificLocationUI(eggId) {
+  // Update the count on all instances of this egg card visually
+  const cards = document.querySelectorAll(`.egg-card`); // Find all cards
+  // We identify the right card by checking the text content of the # ID
+  cards.forEach(card => {
+    if(card.querySelector('span').innerText === `#${eggId}`) {
+        const count = eggData[eggId];
+        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
+        card.querySelector('.qty-controls span').innerText = count;
+    }
+  });
+
+  // Update the category badges (Total/Owned/Missing)
+  areaData.forEach((area, index) => {
+    if (area.eggs.includes(eggId)) {
+      const ownedInCat = area.eggs.filter((id) => eggData[id] > 0).length;
+      const totalInCat = area.eggs.length;
+      const missingInCat = totalInCat - ownedInCat;
+
+      // Find the specific block for this area
+      const blocks = document.querySelectorAll('.location-block');
+      const block = blocks[index];
+      if (block) {
+        block.querySelector('.badge-owned').innerText = `Owned: ${ownedInCat}`;
+        block.querySelector('.badge-missing').innerText = `Missing: ${missingInCat}`;
       }
+    }
+  });
+}
 
 
 
