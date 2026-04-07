@@ -356,3 +356,30 @@
         background: #2d1b1b;
         color: #ffcf96;
       }
+.egg-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+  border-color: var(--primary);
+}
+/* Smooth Page Transitions */
+#captureZone, #locationZone {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  width: 100%;
+}
+
+.page.hidden {
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+  /* Instead of absolute, we use height 0 to prevent the screen from jumping */
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.page.visible {
+  opacity: 1;
+  transform: translateY(0);
+  height: auto;
+  visibility: visible;
+}
