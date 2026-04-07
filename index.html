@@ -472,11 +472,40 @@
         localStorage.setItem("eggInventory", JSON.stringify(eggData));
       }
 
-      function update(id, change) {
-        eggData[id] = Math.max(0, eggData[id] + change);
+      // Replace your existing update function with this:
+function update(id, change) {
+  eggData[id] = Math.max(0, eggData[id] + change);
+  
+  // Save data
+  localStorage.setItem("eggInventory", JSON.stringify(eggData));
+  
+  // Update stats at the top
+  updateStats();
 
-        render();
+  if (viewMode === "dex") {
+     
+      if (currentFilter !== 'all') {
+          const scrollPos = window.scrollY;
+          renderDex();
+          window.scrollTo(0, scrollPos);
+      } else {
+        
+          const cards = document.querySelectorAll('.egg-card');
+        
+          const card = cards[id - 1]; 
+          if (card) {
+              card.className = `egg-card ${eggData[id] > 0 ? "has-any" : "is-missing"}`;
+              card.querySelector('span[style*="font-weight:800"]').innerText = eggData[id];
+          }
       }
+  } else {
+ 
+      const locZone = document.getElementById("locationZone");
+      const scrollPos = locZone.scrollTop;
+      renderLocations();
+      locZone.scrollTop = scrollPos;
+  }
+}
 
       let hasCelebrated = false;
 
