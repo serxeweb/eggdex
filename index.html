@@ -946,8 +946,8 @@
 
 
 
-     function update(id, change) {
-        // 1. Save current scroll position of the window
+    function update(id, change) {
+        // 1. Save current scroll position
         const scrollPos = window.scrollY;
         
         // 2. Update the data
@@ -956,9 +956,14 @@
         // 3. Re-render the UI
         render();
 
-        // 4. Restore the scroll position immediately
+        // 4. Force the scroll back after the browser finishes rendering
         if (viewMode === "loc") {
-          window.scrollTo(0, scrollPos);
+          requestAnimationFrame(() => {
+            window.scrollTo({
+              top: scrollPos,
+              behavior: 'instant' // prevents "bouncing" animation
+            });
+          });
         }
       }
 
