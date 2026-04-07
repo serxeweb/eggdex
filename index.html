@@ -125,7 +125,7 @@
       <div class="grid" id="eggGrid"></div>
     </div>
 
-    <div id="locationZone" class="page hidden" ></div>
+    <div id="locationZone" class="page hidden" style="display: none"></div>
 
     <button class="assistant-btn" onclick="toggleViewMode()">
       <img
@@ -152,94 +152,85 @@
 
       const areaData = [
         {
-          name: "Graal/Easter Grove Spawn",
-          desc: "Common eggs that appear naturally on the ground in these areas.",
-          eggs: [1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83, 84, 85],
+          name: "Spawn Eggs",
+
+          desc: "Common eggs that appear around the map.",
+
+          eggs: [
+            1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83,
+            84, 85,
+          ],
+
           img: "./assets/img/spawn.jpg",
         },
+
         {
-          name: "Looting & Vases",
-          desc: "Found by breaking pots or loots.",
-          eggs: [16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87, 88, 89, 90],
-          img: "./assets/img/pots.jpg",
-        },
-        {
-          name: "Easter Grove/Graal Bush & Grass",
-          desc: "Found by cutting grass and bushes in the main fields and Easter Grove.",
-          eggs: [6, 8, 9, 10, 26, 27, 28, 56, 58, 59, 60, 76, 77, 78],
+          name: "Bush/Grass Eggs",
+
+          desc: "Found by cutting grass and bushes, including indoors and in Big City. (26 & 76 indoor), (30 Big City)",
+
+          eggs: [
+            6, 7, 8, 9, 10, 26, 27, 28, 29, 30, 56, 57, 58, 59, 60, 76, 77, 78,
+            79, 80,
+          ],
+
           img: "./assets/img/bush.jpg",
         },
+
         {
-          name: "Destiny Bushes & Grass",
-          desc: "Specific grass/bush drops found within the Destiny area.",
-          eggs: [7, 29, 57, 79],
-          img: "./assets/img/bush.jpg",
-        },
-        {
-          name: "Big City Bushes & Grass",
-          desc: "Eggs found specifically by clearing bush in Big City.",
-          eggs: [30, 80],
-          img: "./assets/img/bigcitybush.jpg",
-        },
-        {
-          name: "Big City Digging",
-          desc: "Use your shovel to find these buried eggs in the Big City area.",
-          eggs: [21, 46, 71, 96],
-          img: "./assets/img/bigcity.jpg",
-        },
-        {
-          name: "Railway Digging",
-          desc: "Buried eggs found specifically along the Railway tracks or in Rail Road Caves.",
-          eggs: [22, 47, 72, 97],
-          img: "./assets/img/railwaydig.jpg",
-        },
-        {
-          name: "Destiny Digging",
-          desc: "Buried eggs located within the Destiny region.",
-          eggs: [23, 48, 73, 98],
-          img: "./assets/img/destinydig.jpg",
-        },
-        {
-          name: "Easter Grove Digging",
-          desc: "Buried eggs found by digging in the Easter Grove area.",
-          eggs: [24, 49, 74, 99],
-          img: "./assets/img/eastergrovedig.jpg",
-        },
-        {
-          name: "General Graal Dig Spots",
-          desc: "Miscellaneous dig spots found across the map (75, 100, 50, 25).",
-          eggs: [25, 50, 75, 100],
+          name: "Dig Eggs",
+
+          desc: "Buried eggs found in (21,46,71,96 Big City), (22,47,72,97 RR Caves), (23,48,73,98 Destiny), (24,49,74,99 Easter Grove), and other (25,50,75,100) dig spots.",
+
+          eggs: [
+            21, 22, 23, 24, 25, 46, 47, 48, 49, 50, 71, 72, 73, 74, 75, 96, 97,
+            98, 99, 100,
+          ],
+
           img: "./assets/img/dig.jpg",
         },
+
         {
-          name: "Rats, Bats, & Blobs",
-          desc: "Dropped by defeating Rats, Bats, and standard Blobs.",
-          eggs: [14, 44, 64, 94],
+          name: "Spider - Crab - Archer - Blob Eggs",
+
+          desc: "Dropped by defeating Spiders, Crabs, Archers, and Blobs.",
+
+          eggs: [11, 13, 41, 43, 61, 63, 91, 93],
+
           img: "./assets/img/blob.jpg",
         },
+
         {
-          name: "Bandit, Rebel, Pyrats, & Snakes",
-          desc: "Combat drops from Bandits, Rebel, Pyrats, and Snakes.",
+          name: "Rebel - Pyrat - Bandit - Snake Eggs",
+
+          desc: "Dropped by defeating Rebels, Pyrats, Bandits, and Snakes.",
+
           eggs: [12, 42, 62, 92],
+
           img: "./assets/img/bandit.jpg",
         },
+
         {
-          name: "Spiders",
-          desc: "Dropped by defeating Spiders in forests.",
-          eggs: [11, 43, 61, 93],
-          img: "./assets/img/spider.jpg",
+          name: "Pot/Loot Eggs",
+
+          desc: "Found inside breakable pots or loots.",
+
+          eggs: [
+            16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87,
+            88, 89, 90,
+          ],
+
+          img: "./assets/img/pots.jpg",
         },
+
         {
-          name: "Lizardons",
-          desc: "Dropped by defeating Lizardons.",
-          eggs: [15, 45, 65, 95],
-          img: "./assets/img/lizardon.jpg",
-        },
-        {
-          name: "Crabs & Archers",
-          desc: "Combat drops from Crabs (beaches) and Archers.",
-          eggs: [13, 41, 63, 91],
-          img: "./assets/img/archer.jpg",
+          name: "Bat - Rat - Blob - Lizardon Eggs",
+
+          desc: "Dropped by defeating Bats, Rats, Blobs, and (15,45,65, 95 Lizardons).",
+
+          eggs: [14, 15, 44, 45, 64, 65, 94, 95],
+
+          img: "./assets/img/bat.jpg",
         },
       ];
 
@@ -259,41 +250,62 @@
           ? "fas fa-sun header-icon"
           : "fas fa-moon header-icon";
       }
-function toggleViewMode() {
-  const dex = document.getElementById("captureZone");
-  const loc = document.getElementById("locationZone");
-  const dexControls = document.getElementById("dexControls");
-  const locControls = document.getElementById("locControls");
 
+      function toggleViewMode() {
+        const dex = document.getElementById("captureZone");
 
-  viewMode = viewMode === "dex" ? "loc" : "dex";
+        const loc = document.getElementById("locationZone");
 
-  if (viewMode === "loc") {
-  
-    dex.classList.replace("visible", "hidden");
-    dexControls.style.display = "none";
-    
-    
-    loc.classList.replace("hidden", "visible");
-    locControls.style.display = "block";
-    renderLocations();
-  } else {
-   
-    loc.classList.replace("visible", "hidden");
-    locControls.style.display = "none";
-    
-  
-    dex.classList.replace("hidden", "visible");
-    dexControls.style.display = "block";
-    renderDex(); 
-  }
+        const dexControls = document.getElementById("dexControls");
 
-  
-  document.getElementById("viewIcon").src =
-    viewMode === "dex"
-      ? "./assets/img/location_icon.png"
-      : "./assets/img/egg_icon.png";
-}
+        const locControls = document.getElementById("locControls");
+
+        viewMode = viewMode === "dex" ? "loc" : "dex";
+
+        if (viewMode === "loc") {
+          dex.classList.add("hidden");
+
+          dex.classList.remove("visible");
+
+          dexControls.style.display = "none";
+
+          loc.style.display = "block";
+
+          render();
+
+          setTimeout(() => {
+            loc.classList.remove("hidden");
+
+            loc.classList.add("visible");
+
+            locControls.style.display = "block";
+          }, 50);
+        } else {
+          loc.classList.add("hidden");
+
+          loc.classList.remove("visible");
+
+          locControls.style.display = "none";
+
+          dex.style.display = "block";
+
+          render();
+
+          setTimeout(() => {
+            dex.classList.remove("hidden");
+
+            dex.classList.add("visible");
+
+            dexControls.style.display = "block";
+          }, 50);
+        }
+
+        document.getElementById("viewIcon").src =
+          viewMode === "dex"
+            ? "./assets/img/location_icon.png"
+            : "./assets/img/egg_icon.png";
+      }
+
       function createEggCard(i) {
         const count = eggData[i];
 
@@ -346,45 +358,56 @@ function toggleViewMode() {
         }
       }
 
-     function renderLocations() {
+      function renderLocations() {
         const zone = document.getElementById("locationZone");
-        
-        // SAVE SCROLL POSITIONS: Map area names to their current scrollLeft value
-        const scrollPositions = {};
-        zone.querySelectorAll('.location-block').forEach(block => {
-          const name = block.querySelector('h3').innerText;
-          const slider = block.querySelector('.egg-slider');
-          if (slider) scrollPositions[name] = slider.scrollLeft;
-        });
 
         zone.innerHTML = "";
 
         areaData.forEach((area) => {
           const totalInCat = area.eggs.length;
+
           const ownedInCat = area.eggs.filter((id) => eggData[id] > 0).length;
+
           const missingInCat = totalInCat - ownedInCat;
 
           const block = document.createElement("div");
+
           block.className = "location-block";
+
           block.innerHTML = `
-            <div class="location-header">
-              <img src="${area.img}" class="location-img" alt="${area.name}">
-              <div class="location-text">
-                <h3>${area.name}</h3>
-                <p>${area.desc}</p>
-                <div class="category-stats">
-                  <span class="badge badge-total">Total: ${totalInCat}</span>
-                  <span class="badge badge-owned">Owned: ${ownedInCat}</span>
-                  <span class="badge badge-missing">Missing: ${missingInCat}</span>
-                </div>
-              </div>
-            </div>`;
+
+      <div class="location-header">
+
+        <img src="${area.img}" class="location-img" alt="${area.name}">
+
+        <div class="location-text">
+
+          <h3>${area.name}</h3>
+
+          <p>${area.desc}</p>
+
+          <div class="category-stats">
+
+            <span class="badge badge-total">Total: ${totalInCat}</span>
+
+            <span class="badge badge-owned">Owned: ${ownedInCat}</span>
+
+            <span class="badge badge-missing">Missing: ${missingInCat}</span>
+
+          </div>
+
+        </div>
+
+      </div>`;
 
           const slider = document.createElement("div");
+
           slider.className = "egg-slider";
+
           slider.onwheel = (e) => {
             if (e.deltaY !== 0) {
               e.preventDefault();
+
               slider.scrollLeft += e.deltaY;
             }
           };
@@ -394,35 +417,43 @@ function toggleViewMode() {
           });
 
           block.appendChild(slider);
-          zone.appendChild(block);
 
-          // RESTORE SCROLL POSITION: Apply the saved value back to the new slider
-          if (scrollPositions[area.name]) {
-            // requestAnimationFrame ensures the DOM is painted before we scroll
-            requestAnimationFrame(() => {
-              slider.scrollLeft = scrollPositions[area.name];
-            });
-          }
+          zone.appendChild(block);
         });
 
-        // Add the disclaimer at the bottom
         const disclaimer = document.createElement("div");
+
         disclaimer.className = "disclaimer-card";
+
         disclaimer.innerHTML = `
-          <div style="margin-bottom: 8px;">
-            <i class="fas fa-exclamation-triangle"></i> 
-            Note: These egg locations are based on the 2025 Hunt. 
-          </div>
-          <a href="https://www.youtube.com/watch?v=EpSWCxWuVto" target="_blank" 
-             style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px 12px; border-radius: 10px; margin-bottom: 8px;">
-             <i class="fab fa-youtube" style="color: #ff0000;"></i> 
-             View 2025 Source Guide
-          </a>
-          <br>
-          <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
-        `;
+
+    <div style="margin-bottom: 8px;">
+
+      <i class="fas fa-exclamation-triangle"></i> 
+
+      Note: These egg locations are based on the 2025 Hunt. 
+
+    </div>
+
+    <a href="https://www.youtube.com/watch?v=EpSWCxWuVto" target="_blank" 
+
+       style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px 12px; border-radius: 10px; margin-bottom: 8px;">
+
+       <i class="fab fa-youtube" style="color: #ff0000;"></i> 
+
+       View 2025 Source Guide
+
+    </a>
+
+    <br>
+
+    <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
+
+  `;
+
         zone.appendChild(disclaimer);
       }
+
       function render() {
         if (viewMode === "dex") renderDex();
         else renderLocations();
@@ -549,115 +580,169 @@ function toggleViewMode() {
       }
 
       function copyTradeText() {
-  let missing = [], extras = [], owned = [];
-  for (let i = 1; i <= totalUniqueEggs; i++) {
-    if (eggData[i] === 0) missing.push(i);
-    else {
-      owned.push(i);
-      if (eggData[i] > 1) extras.push(i);
-    }
-  }
+        let missing = [];
 
-  const formatRange = (nums) => {
-    if (nums.length === 0) return "";
-    nums.sort((a, b) => a - b);
-    let result = [], start = nums[0], end = nums[0];
-    for (let i = 1; i <= nums.length; i++) {
-      if (i < nums.length && nums[i] === end + 1) end = nums[i];
-      else {
-        result.push(start === end ? start : `${start}-${end}`);
-        if (i < nums.length) start = end = nums[i];
-      }
-    }
-    return result.join(",");
-  };
+        let extras = [];
 
-  let textToCopy = "";
-  let emptyTitle = "Empty List", emptyMsg = "No eggs found for this category.", emptyIcon = "info";
+        let owned = [];
 
-  if (currentFilter === "all") {
-    let parts = [];
-    if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
-    if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
-    textToCopy = parts.join(" ");
-    if (!textToCopy && owned.length === totalUniqueEggs) {
-      emptyTitle = "Congratulations!";
-      emptyMsg = "Your EggDex is 100% complete! Great job!";
-      emptyIcon = "success";
-    }
-  } else if (currentFilter === "collected") {
-    textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
-    if (!textToCopy) emptyMsg = "Your collection is empty. Time to hunt!";
-  } else if (currentFilter === "missing") {
-    textToCopy = missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
-    if (!textToCopy && owned.length === totalUniqueEggs) {
-      emptyTitle = "Hunt Complete!";
-      emptyMsg = "You aren't missing any eggs!";
-      emptyIcon = "success";
-    }
-  } else if (currentFilter === "duplicates") {
-    textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
-    if (!textToCopy) emptyMsg = "No extra eggs to trade right now.";
-  }
+        // Categorize eggs
 
-  if (!textToCopy) {
-    Swal.fire({
-      title: emptyTitle, text: emptyMsg, icon: emptyIcon,
-      background: isDarkMode ? "#2d3436" : "#ffffff",
-      color: isDarkMode ? "#dfe6e9" : "#2d3436",
-      confirmButtonColor: "#ffb7ce",
-    });
-    return;
-  }
+        for (let i = 1; i <= totalUniqueEggs; i++) {
+          if (eggData[i] === 0) {
+            missing.push(i);
+          } else {
+            owned.push(i);
 
-  const charCount = textToCopy.length;
-  const bgColor = isDarkMode ? "#1e272e" : "#ffffff";
-  const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
-  const boxColor = isDarkMode ? "rgba(255,255,255,0.05)" : "#f8f9fa";
+            if (eggData[i] > 1) {
+              extras.push(i);
+            }
+          }
+        }
 
-  // Badge Logic Colors
-  const publicOk = charCount <= 99;
-  const privateOk = charCount <= 255;
+        // HELPER: Logic to turn [1, 2, 3, 5] into "1-3,5"
 
-  Swal.fire({
-    title: "Copy Trade List",
-    background: bgColor,
-    color: textColor,
-    showCancelButton: true,
-    confirmButtonText: "Copy to Clipboard",
-    confirmButtonColor: "#ffb7ce",
-    cancelButtonText: "Close",
-    html: `
-      <div style="text-align: left; font-family: 'Fredoka', sans-serif;">
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-          <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${publicOk ? '#55efc4' : '#ff7675'}; background: ${publicOk ? 'rgba(85, 239, 196, 0.1)' : 'rgba(255, 118, 117, 0.1)'};">
-            <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${publicOk ? '#55efc4' : '#ff7675'};">Public Chat</div>
-            <div style="font-weight: 700; font-size: 1rem; color: ${publicOk ? '#55efc4' : '#ff7675'};">${publicOk ? '✓ OK' : '✗ TOO LONG'}</div>
-          </div>
-          
-          <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${privateOk ? '#55efc4' : '#ff7675'}; background: ${privateOk ? 'rgba(85, 239, 196, 0.1)' : 'rgba(255, 118, 117, 0.1)'};">
-            <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${privateOk ? '#55efc4' : '#ff7675'};">Private / PM</div>
-            <div style="font-weight: 700; font-size: 1rem; color: ${privateOk ? '#55efc4' : '#ff7675'};">${privateOk ? '✓ OK' : '✗ TOO LONG'}</div>
-          </div>
-        </div>
+        const formatRange = (nums) => {
+          if (nums.length === 0) return "";
 
-        <div style="background: ${boxColor}; padding: 15px; border-radius: 15px; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 15px;">
-           <div style="font-size: 0.9rem; word-break: break-all; line-height: 1.4; color: ${textColor};">${textToCopy}</div>
-        </div>
+          nums.sort((a, b) => a - b);
 
-        <div style="text-align: center; font-size: 0.85rem; opacity: 0.8;">
-           Total: <strong>${charCount}</strong> characters
-        </div>
+          let result = [];
+
+          let start = nums[0];
+
+          let end = nums[0];
+
+          for (let i = 1; i <= nums.length; i++) {
+            if (i < nums.length && nums[i] === end + 1) {
+              end = nums[i];
+            } else {
+              if (start === end) {
+                result.push(start);
+              } else {
+                result.push(`${start}-${end}`);
+              }
+
+              if (i < nums.length) {
+                start = end = nums[i];
+              }
+            }
+          }
+
+          return result.join(",");
+        };
+
+        let textToCopy = "";
+
+        // Apply the range logic based on current filter
+
+        if (currentFilter === "all") {
+          let parts = [];
+
+          if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
+
+          if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
+
+          textToCopy = parts.join(" ");
+        } else if (currentFilter === "collected") {
+          textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
+        } else if (currentFilter === "missing") {
+          textToCopy =
+            missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
+        } else if (currentFilter === "duplicates") {
+          textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
+        }
+
+        if (!textToCopy) {
+          Swal.fire({
+            title: "Empty!",
+
+            text: "No eggs found for this category.",
+
+            icon: "info",
+
+            background: isDarkMode ? "#2d3436" : "#ffffff",
+
+            color: isDarkMode ? "#dfe6e9" : "#2d3436",
+
+            confirmButtonColor: "#ffb7ce",
+          });
+
+          return;
+        }
+
+        const charCount = textToCopy.length;
+
+        const isTooLong = charCount > 255; // Changed back to Graal's actual 255 limit
+
+        const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
+
+        const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
+
+        const boxColor = isDarkMode
+          ? "rgba(255,255,255,0.1)"
+          : "rgba(0,0,0,0.05)";
+
+        Swal.fire({
+          title: isTooLong ? "List is too long!" : "Ready to Copy",
+
+          background: bgColor,
+
+          color: textColor,
+
+          html: `
+
+      <div style="font-size: 0.85rem; margin-bottom: 15px; word-break: break-all; background: ${boxColor}; padding: 12px; border-radius: 10px; color: ${textColor}; border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"}; text-align: left; font-family: 'Fredoka', sans-serif;">
+
+        ${textToCopy}
+
       </div>
-    `
-  }).then((result) => {
-    if (result.isConfirmed) {
-      navigator.clipboard.writeText(textToCopy);
-      Swal.fire({ title: "Copied!", toast: true, position: "top-end", timer: 2000, showConfirmButton: false, icon: "success" });
-    }
-  });
-}
+
+      <div style="font-weight: 700; font-size: 1rem; color: ${isTooLong ? "#ff7675" : "#55efc4"}">
+
+        Characters: ${charCount} / 255
+
+      </div>
+
+      ${isTooLong ? '<p style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600;">⚠️ This will be cut off in Graal chat!</p>' : ""}
+
+    `,
+
+          icon: isTooLong ? "warning" : "info",
+
+          showCancelButton: true,
+
+          confirmButtonText: isTooLong ? "Copy Anyway" : "Copy to Clipboard",
+
+          cancelButtonText: "Cancel",
+
+          confirmButtonColor: "#ffb7ce",
+
+          cancelButtonColor: isDarkMode ? "#636e72" : "#ccc",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigator.clipboard.writeText(textToCopy);
+
+            Swal.fire({
+              title: "Copied!",
+
+              toast: true,
+
+              position: "top-end",
+
+              timer: 2000,
+
+              showConfirmButton: false,
+
+              icon: "success",
+
+              background: bgColor,
+
+              color: textColor,
+            });
+          }
+        });
+      }
 
       function updateProfileUI() {
         document.getElementById("displayUser").innerText = userData.name;
