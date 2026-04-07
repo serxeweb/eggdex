@@ -946,14 +946,20 @@
 
 
 
-      function update(id, change) {
-
+     function update(id, change) {
+        // 1. Save current scroll position of the window
+        const scrollPos = window.scrollY;
+        
+        // 2. Update the data
         eggData[id] = Math.max(0, eggData[id] + change);
 
-
-
+        // 3. Re-render the UI
         render();
 
+        // 4. Restore the scroll position immediately
+        if (viewMode === "loc") {
+          window.scrollTo(0, scrollPos);
+        }
       }
 
 
