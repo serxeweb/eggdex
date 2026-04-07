@@ -1,20 +1,4 @@
-img {
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
-  pointer-events: none;
-}
 
-.egg-card,
-.egg-icon,
-.badge {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
 :root {
   --bg: #f1e3cc;
   --card: #ffffff;
