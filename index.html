@@ -150,87 +150,96 @@
 
       let isDarkMode = localStorage.getItem("darkMode") === "true";
 
-      const areaData = [
+     const areaData = [
         {
-          name: "Spawn Eggs",
-
-          desc: "Common eggs that appear around the map.",
-
-          eggs: [
-            1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83,
-            84, 85,
-          ],
-
+          name: "Graal/Easter Grove Spawn",
+          desc: "Common eggs that appear naturally on the ground in these areas.",
+          eggs: [1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83, 84, 85],
           img: "./assets/img/spawn.jpg",
         },
-
         {
-          name: "Bush/Grass Eggs",
-
-          desc: "Found by cutting grass and bushes, including indoors and in Big City. (26 & 76 indoor), (30 Big City)",
-
-          eggs: [
-            6, 7, 8, 9, 10, 26, 27, 28, 29, 30, 56, 57, 58, 59, 60, 76, 77, 78,
-            79, 80,
-          ],
-
-          img: "./assets/img/bush.jpg",
-        },
-
-        {
-          name: "Dig Eggs",
-
-          desc: "Buried eggs found in (21,46,71,96 Big City), (22,47,72,97 RR Caves), (23,48,73,98 Destiny), (24,49,74,99 Easter Grove), and other (25,50,75,100) dig spots.",
-
-          eggs: [
-            21, 22, 23, 24, 25, 46, 47, 48, 49, 50, 71, 72, 73, 74, 75, 96, 97,
-            98, 99, 100,
-          ],
-
-          img: "./assets/img/dig.jpg",
-        },
-
-        {
-          name: "Spider - Crab - Archer - Blob Eggs",
-
-          desc: "Dropped by defeating Spiders, Crabs, Archers, and Blobs.",
-
-          eggs: [11, 13, 41, 43, 61, 63, 91, 93],
-
-          img: "./assets/img/blob.jpg",
-        },
-
-        {
-          name: "Rebel - Pyrat - Bandit - Snake Eggs",
-
-          desc: "Dropped by defeating Rebels, Pyrats, Bandits, and Snakes.",
-
-          eggs: [12, 42, 62, 92],
-
-          img: "./assets/img/bandit.jpg",
-        },
-
-        {
-          name: "Pot/Loot Eggs",
-
-          desc: "Found inside breakable pots or loots.",
-
-          eggs: [
-            16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87,
-            88, 89, 90,
-          ],
-
+          name: "Looting & Vases",
+          desc: "Found by breaking pots or loots.",
+          eggs: [16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87, 88, 89, 90],
           img: "./assets/img/pots.jpg",
         },
-
         {
-          name: "Bat - Rat - Blob - Lizardon Eggs",
-
-          desc: "Dropped by defeating Bats, Rats, Blobs, and (15,45,65, 95 Lizardons).",
-
-          eggs: [14, 15, 44, 45, 64, 65, 94, 95],
-
-          img: "./assets/img/bat.jpg",
+          name: "Easter Grove/Graal Bush & Grass",
+          desc: "Found by cutting grass and bushes in the main fields and Easter Grove.",
+          eggs: [6, 8, 9, 10, 26, 27, 28, 56, 58, 59, 60, 76, 77, 78],
+          img: "./assets/img/bush.jpg",
+        },
+        {
+          name: "Destiny Bushes & Grass",
+          desc: "Specific grass/bush drops found within the Destiny area.",
+          eggs: [7, 29, 57, 79],
+          img: "./assets/img/bush.jpg",
+        },
+        {
+          name: "Big City Bushes & Grass",
+          desc: "Eggs found specifically by clearing bush in Big City.",
+          eggs: [30, 80],
+          img: "./assets/img/bigcitybush.jpg",
+        },
+        {
+          name: "Big City Digging",
+          desc: "Use your shovel to find these buried eggs in the Big City area.",
+          eggs: [21, 46, 71, 96],
+          img: "./assets/img/bigcity.jpg",
+        },
+        {
+          name: "Railway Digging",
+          desc: "Buried eggs found specifically along the Railway tracks or in Rail Road Caves.",
+          eggs: [22, 47, 72, 97],
+          img: "./assets/img/railwaydig.jpg",
+        },
+        {
+          name: "Destiny Digging",
+          desc: "Buried eggs located within the Destiny region.",
+          eggs: [23, 48, 73, 98],
+          img: "./assets/img/destinydig.jpg",
+        },
+        {
+          name: "Easter Grove Digging",
+          desc: "Buried eggs found by digging in the Easter Grove area.",
+          eggs: [24, 49, 74, 99],
+          img: "./assets/img/eastergrovedig.jpg",
+        },
+        {
+          name: "General Graal Dig Spots",
+          desc: "Miscellaneous dig spots found across the map (75, 100, 50, 25).",
+          eggs: [25, 50, 75, 100],
+          img: "./assets/img/dig.jpg",
+        },
+        {
+          name: "Rats, Bats, & Blobs",
+          desc: "Dropped by defeating Rats, Bats, and standard Blobs.",
+          eggs: [14, 44, 64, 94],
+          img: "./assets/img/blob.jpg",
+        },
+        {
+          name: "Bandit, Rebel, Pyrats, & Snakes",
+          desc: "Combat drops from Bandits, Rebel, Pyrats, and Snakes.",
+          eggs: [12, 42, 62, 92],
+          img: "./assets/img/bandit.jpg",
+        },
+        {
+          name: "Spiders",
+          desc: "Dropped by defeating Spiders in forests.",
+          eggs: [11, 43, 61, 93],
+          img: "./assets/img/spider.jpg",
+        },
+        {
+          name: "Lizardons",
+          desc: "Dropped by defeating Lizardons.",
+          eggs: [15, 45, 65, 95],
+          img: "./assets/img/lizardon.jpg",
+        },
+        {
+          name: "Crabs & Archers",
+          desc: "Combat drops from Crabs and Archers.",
+          eggs: [13, 41, 63, 91],
+          img: "./assets/img/archer.jpg",
         },
       ];
 
