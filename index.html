@@ -590,19 +590,15 @@
 
       function copyTradeText() {
         let missing = [];
-
         let extras = [];
-
         let owned = [];
 
         // Categorize eggs
-
         for (let i = 1; i <= totalUniqueEggs; i++) {
           if (eggData[i] === 0) {
             missing.push(i);
           } else {
             owned.push(i);
-
             if (eggData[i] > 1) {
               extras.push(i);
             }
@@ -610,18 +606,12 @@
         }
 
         // HELPER: Logic to turn [1, 2, 3, 5] into "1-3,5"
-
         const formatRange = (nums) => {
           if (nums.length === 0) return "";
-
           nums.sort((a, b) => a - b);
-
           let result = [];
-
           let start = nums[0];
-
           let end = nums[0];
-
           for (let i = 1; i <= nums.length; i++) {
             if (i < nums.length && nums[i] === end + 1) {
               end = nums[i];
@@ -631,33 +621,26 @@
               } else {
                 result.push(`${start}-${end}`);
               }
-
               if (i < nums.length) {
                 start = end = nums[i];
               }
             }
           }
-
           return result.join(",");
         };
 
         let textToCopy = "";
 
-        // Apply the range logic based on current filter
-
+        // Apply logic based on current filter
         if (currentFilter === "all") {
           let parts = [];
-
           if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
-
           if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
-
           textToCopy = parts.join(" ");
         } else if (currentFilter === "collected") {
           textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
         } else if (currentFilter === "missing") {
-          textToCopy =
-            missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
+          textToCopy = missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
         } else if (currentFilter === "duplicates") {
           textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
         }
@@ -665,88 +648,67 @@
         if (!textToCopy) {
           Swal.fire({
             title: "Empty!",
-
             text: "No eggs found for this category.",
-
             icon: "info",
-
             background: isDarkMode ? "#2d3436" : "#ffffff",
-
             color: isDarkMode ? "#dfe6e9" : "#2d3436",
-
             confirmButtonColor: "#ffb7ce",
           });
-
           return;
         }
 
         const charCount = textToCopy.length;
+        const isPublicTooLong = charCount > 99;
+        const isPrivateTooLong = charCount > 255;
 
-        const isTooLong = charCount > 255; // Changed back to Graal's actual 255 limit
+        // Logic for color status
+        let statusColor = "#55efc4"; // Default Green (Safe)
+        let warningText = "";
+
+        if (isPrivateTooLong) {
+            statusColor = "#ff7675"; // Red (Too long for everything)
+            warningText = "⚠️ Way too long! Even Private messages will cut this off.";
+        } else if (isPublicTooLong) {
+            statusColor = "#fdcb6e"; // Yellow/Orange (Warning for Public Chat)
+            warningText = "⚠️ Safe for PMs, but will be cut off in Public Chat (99 limit).";
+        }
 
         const bgColor = isDarkMode ? "#2d3436" : "#ffffff";
-
         const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
-
-        const boxColor = isDarkMode
-          ? "rgba(255,255,255,0.1)"
-          : "rgba(0,0,0,0.05)";
+        const boxColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
 
         Swal.fire({
-          title: isTooLong ? "List is too long!" : "Ready to Copy",
-
+          title: isPrivateTooLong ? "Text is too long!" : "Ready to Copy",
           background: bgColor,
-
           color: textColor,
-
           html: `
-
-      <div style="font-size: 0.85rem; margin-bottom: 15px; word-break: break-all; background: ${boxColor}; padding: 12px; border-radius: 10px; color: ${textColor}; border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"}; text-align: left; font-family: 'Fredoka', sans-serif;">
-
-        ${textToCopy}
-
-      </div>
-
-      <div style="font-weight: 700; font-size: 1rem; color: ${isTooLong ? "#ff7675" : "#55efc4"}">
-
-        Characters: ${charCount} / 255
-
-      </div>
-
-      ${isTooLong ? '<p style="font-size: 0.8rem; color: #ff7675; margin-top: 5px; font-weight: 600;">⚠️ This will be cut off in Graal chat!</p>' : ""}
-
-    `,
-
-          icon: isTooLong ? "warning" : "info",
-
+            <div style="font-size: 0.85rem; margin-bottom: 15px; word-break: break-all; background: ${boxColor}; padding: 12px; border-radius: 10px; color: ${textColor}; border: 1px solid ${isDarkMode ? "#636e72" : "#dfe6e9"}; text-align: left; font-family: 'Fredoka', sans-serif;">
+              ${textToCopy}
+            </div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: ${statusColor}">
+              Length: ${charCount} chars
+            </div>
+            <p style="font-size: 0.8rem; color: ${statusColor}; margin-top: 5px; font-weight: 600;">
+              ${warningText}
+            </p>
+          `,
+          icon: isPrivateTooLong ? "error" : (isPublicTooLong ? "warning" : "info"),
           showCancelButton: true,
-
-          confirmButtonText: isTooLong ? "Copy Anyway" : "Copy to Clipboard",
-
+          confirmButtonText: "Copy to Clipboard",
           cancelButtonText: "Cancel",
-
           confirmButtonColor: "#ffb7ce",
-
           cancelButtonColor: isDarkMode ? "#636e72" : "#ccc",
         }).then((result) => {
           if (result.isConfirmed) {
             navigator.clipboard.writeText(textToCopy);
-
             Swal.fire({
               title: "Copied!",
-
               toast: true,
-
               position: "top-end",
-
               timer: 2000,
-
               showConfirmButton: false,
-
               icon: "success",
-
               background: bgColor,
-
               color: textColor,
             });
           }
