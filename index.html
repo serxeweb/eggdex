@@ -261,59 +261,38 @@
       }
 
       function toggleViewMode() {
-        const dex = document.getElementById("captureZone");
+  const dex = document.getElementById("captureZone");
+  const loc = document.getElementById("locationZone");
+  const dexControls = document.getElementById("dexControls");
+  const locControls = document.getElementById("locControls");
 
-        const loc = document.getElementById("locationZone");
+  viewMode = viewMode === "dex" ? "loc" : "dex";
 
-        const dexControls = document.getElementById("dexControls");
+  if (viewMode === "loc") {
+    // Hide Dex
+    dex.classList.replace("visible", "hidden");
+    dexControls.style.display = "none";
+    
+    // Show Locations
+    loc.classList.replace("hidden", "visible");
+    locControls.style.display = "block";
+    renderLocations(); 
+  } else {
+    // Hide Locations
+    loc.classList.replace("visible", "hidden");
+    locControls.style.display = "none";
+    
+    // Show Dex
+    dex.classList.replace("hidden", "visible");
+    dexControls.style.display = "block";
+    renderDex();
+  }
 
-        const locControls = document.getElementById("locControls");
-
-        viewMode = viewMode === "dex" ? "loc" : "dex";
-
-        if (viewMode === "loc") {
-          dex.classList.add("hidden");
-
-          dex.classList.remove("visible");
-
-          dexControls.style.display = "none";
-
-          loc.style.display = "block";
-
-          render();
-
-          setTimeout(() => {
-            loc.classList.remove("hidden");
-
-            loc.classList.add("visible");
-
-            locControls.style.display = "block";
-          }, 50);
-        } else {
-          loc.classList.add("hidden");
-
-          loc.classList.remove("visible");
-
-          locControls.style.display = "none";
-
-          dex.style.display = "block";
-
-          render();
-
-          setTimeout(() => {
-            dex.classList.remove("hidden");
-
-            dex.classList.add("visible");
-
-            dexControls.style.display = "block";
-          }, 50);
-        }
-
-        document.getElementById("viewIcon").src =
-          viewMode === "dex"
-            ? "./assets/img/location_icon.png"
-            : "./assets/img/egg_icon.png";
-      }
+  document.getElementById("viewIcon").src =
+    viewMode === "dex"
+      ? "./assets/img/location_icon.png"
+      : "./assets/img/egg_icon.png";
+}
 
       function createEggCard(i) {
         const count = eggData[i];
