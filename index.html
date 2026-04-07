@@ -1,1025 +1,2001 @@
 <!doctype html>
 
+
+
 <html lang="en">
+
   <head>
+
     <meta charset="UTF-8" />
+
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+
+
     <title>EggDex</title>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+
     <link
+
       rel="icon"
+
       type="image/png"
+
       href="./assets/img/serxe_easter_icon.png"
+
     />
+
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+
+
     <link
+
       rel="stylesheet"
+
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+
     />
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+
+
     <link
+
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap"
+
       rel="stylesheet"
+
     />
 
+
+
     <link rel="stylesheet" href="./assets/style.css" />
+
   </head>
 
+
+
   <body>
+
     <header>
+
       <div class="profile-card">
+
         <div class="header-actions">
-          <i
-            class="fas fa-question-circle header-icon"
-            title="Assistant"
-            onclick="openAssistant()"
-          ></i>
 
           <i
-            class="fas fa-moon header-icon"
-            id="themeToggle"
-            onclick="toggleDarkMode()"
+
+            class="fas fa-question-circle header-icon"
+
+            title="Assistant"
+
+            onclick="openAssistant()"
+
           ></i>
+
+
+
+          <i
+
+            class="fas fa-moon header-icon"
+
+            id="themeToggle"
+
+            onclick="toggleDarkMode()"
+
+          ></i>
+
+
 
           <i class="fas fa-cog header-icon" onclick="openSettings()"></i>
+
         </div>
+
+
 
         <div id="displayPic" class="profile-pic">
+
           <img src="./assets/img/user_profile.png" alt="Profile" />
+
         </div>
+
+
 
         <div class="profile-right" style="flex-grow: 1">
+
           <h2 id="displayUser" style="margin: 0; font-size: 1rem">
+
             Loading...
+
           </h2>
 
+
+
           <div class="stats-row">
+
             <div class="progress-wrapper">
+
               <div class="progress-container"><div id="progressBar"></div></div>
 
+
+
               <span id="progressPercent">0%</span>
+
             </div>
+
+
 
             <div class="total-counter">
+
               Total: <span id="totalEggsCount">0</span>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
+
 
       <div id="dexControls">
+
         <div class="btn-group">
+
           <button class="filter-btn active" onclick="setFilter('all', this)">
+
             All
+
           </button>
+
+
 
           <button class="filter-btn" onclick="setFilter('collected', this)">
+
             Owned
+
           </button>
+
+
 
           <button class="filter-btn" onclick="setFilter('missing', this)">
+
             Missing
+
           </button>
+
+
 
           <button class="filter-btn" onclick="setFilter('duplicates', this)">
+
             Extras
+
           </button>
+
         </div>
+
+
 
         <div class="btn-group">
+
           <button class="action-btn copy-btn" onclick="copyTradeText()">
+
             <i class="fas fa-copy"></i> Copy List
+
           </button>
+
+
 
           <button class="action-btn snap-btn" onclick="takeScreenshot()">
+
             <i class="fas fa-camera"></i> Screenshot
+
           </button>
+
         </div>
+
       </div>
 
+
+
       <div
+
         id="locControls"
+
         style="
+
           display: none;
+
+
 
           text-align: center;
 
+
+
           font-weight: bold;
 
+
+
           color: var(--primary);
+
         "
+
       >
+
         <i class="fas fa-map-marker-alt"></i> Egg Locations
+
       </div>
+
     </header>
 
+
+
     <div id="captureZone" class="page visible">
+
       <div class="grid" id="eggGrid"></div>
+
     </div>
+
+
 
     <div id="locationZone" class="page hidden" style="display: none"></div>
 
+
+
     <button class="assistant-btn" onclick="toggleViewMode()">
+
       <img
+
         id="viewIcon"
+
         src="./assets/img/location_icon.png"
+
         alt="Toggle View"
+
       />
+
     </button>
 
+
+
     <script>
+
       const totalUniqueEggs = 100;
+
+
 
       let currentFilter = "all";
 
+
+
       let viewMode = "dex";
+
+
 
       let eggData = JSON.parse(localStorage.getItem("eggInventory")) || {};
 
+
+
       let userData = JSON.parse(localStorage.getItem("eggUserData")) || {
+
         name: "",
+
       };
+
+
 
       let isDarkMode = localStorage.getItem("darkMode") === "true";
 
+
+
      const areaData = [
+
         {
+
           name: "Graal/Easter Grove Spawn",
+
           desc: "Common eggs that appear naturally on the ground in these areas.",
+
           eggs: [1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 51, 52, 53, 54, 55, 81, 82, 83, 84, 85],
+
           img: "./assets/img/spawn.jpg",
+
         },
+
         {
+
           name: "Looting & Vases",
+
           desc: "Found by breaking pots or loots.",
+
           eggs: [16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 66, 67, 68, 69, 70, 86, 87, 88, 89, 90],
+
           img: "./assets/img/pots.jpg",
+
         },
+
         {
+
           name: "Easter Grove/Graal Bush & Grass",
+
           desc: "Found by cutting grass and bushes in the main fields and Easter Grove.",
+
           eggs: [6, 8, 9, 10, 26, 27, 28, 56, 58, 59, 60, 76, 77, 78],
+
           img: "./assets/img/bush.jpg",
+
         },
+
         {
+
           name: "Destiny Bushes & Grass",
+
           desc: "Specific grass/bush drops found within the Destiny area.",
+
           eggs: [7, 29, 57, 79],
+
           img: "./assets/img/bush.jpg",
+
         },
+
         {
+
           name: "Big City Bushes & Grass",
+
           desc: "Eggs found specifically by clearing bush in Big City.",
+
           eggs: [30, 80],
+
           img: "./assets/img/bigcitybush.jpg",
+
         },
+
         {
+
           name: "Big City Digging",
+
           desc: "Use your shovel to find these buried eggs in the Big City area.",
+
           eggs: [21, 46, 71, 96],
+
           img: "./assets/img/bigcity.jpg",
+
         },
+
         {
+
           name: "Railway Digging",
+
           desc: "Buried eggs found specifically along the Railway tracks or in Rail Road Caves.",
+
           eggs: [22, 47, 72, 97],
+
           img: "./assets/img/railwaydig.jpg",
+
         },
+
         {
+
           name: "Destiny Digging",
+
           desc: "Buried eggs located within the Destiny region.",
+
           eggs: [23, 48, 73, 98],
+
           img: "./assets/img/destinydig.jpg",
+
         },
+
         {
+
           name: "Easter Grove Digging",
+
           desc: "Buried eggs found by digging in the Easter Grove area.",
+
           eggs: [24, 49, 74, 99],
+
           img: "./assets/img/eastergrovedig.jpg",
+
         },
+
         {
+
           name: "General Graal Dig Spots",
+
           desc: "Miscellaneous dig spots found across the map (75, 100, 50, 25).",
+
           eggs: [25, 50, 75, 100],
+
           img: "./assets/img/dig.jpg",
+
         },
+
         {
+
           name: "Rats, Bats, & Blobs",
+
           desc: "Dropped by defeating Rats, Bats, and standard Blobs.",
+
           eggs: [14, 44, 64, 94],
+
           img: "./assets/img/blob.jpg",
+
         },
+
         {
+
           name: "Bandit, Rebel, Pyrats, & Snakes",
+
           desc: "Combat drops from Bandits, Rebel, Pyrats, and Snakes.",
+
           eggs: [12, 42, 62, 92],
+
           img: "./assets/img/bandit.jpg",
+
         },
+
         {
+
           name: "Spiders",
+
           desc: "Dropped by defeating Spiders in forests.",
+
           eggs: [11, 43, 61, 93],
+
           img: "./assets/img/spider.jpg",
+
         },
+
         {
+
           name: "Lizardons",
+
           desc: "Dropped by defeating Lizardons.",
+
           eggs: [15, 45, 65, 95],
+
           img: "./assets/img/lizardon.jpg",
+
         },
+
         {
+
           name: "Crabs & Archers",
+
           desc: "Combat drops from Crabs and Archers.",
+
           eggs: [13, 41, 63, 91],
+
           img: "./assets/img/archer.jpg",
+
         },
+
       ];
+
+
 
       if (isDarkMode) document.body.classList.add("dark-mode");
 
+
+
       for (let i = 1; i <= totalUniqueEggs; i++)
+
         if (eggData[i] === undefined) eggData[i] = 0;
 
+
+
       function toggleDarkMode() {
+
         isDarkMode = !isDarkMode;
+
+
 
         document.body.classList.toggle("dark-mode");
 
+
+
         localStorage.setItem("darkMode", isDarkMode);
 
+
+
         document.getElementById("themeToggle").className = isDarkMode
+
           ? "fas fa-sun header-icon"
+
           : "fas fa-moon header-icon";
+
       }
 
+
+
       function toggleViewMode() {
+
         const dex = document.getElementById("captureZone");
+
+
 
         const loc = document.getElementById("locationZone");
 
+
+
         const dexControls = document.getElementById("dexControls");
+
+
 
         const locControls = document.getElementById("locControls");
 
+
+
         viewMode = viewMode === "dex" ? "loc" : "dex";
 
+
+
         if (viewMode === "loc") {
+
           dex.classList.add("hidden");
+
+
 
           dex.classList.remove("visible");
 
+
+
           dexControls.style.display = "none";
+
+
 
           loc.style.display = "block";
 
+
+
           render();
 
+
+
           setTimeout(() => {
+
             loc.classList.remove("hidden");
+
+
 
             loc.classList.add("visible");
 
+
+
             locControls.style.display = "block";
+
           }, 50);
+
         } else {
+
           loc.classList.add("hidden");
+
+
 
           loc.classList.remove("visible");
 
+
+
           locControls.style.display = "none";
+
+
 
           dex.style.display = "block";
 
+
+
           render();
 
+
+
           setTimeout(() => {
+
             dex.classList.remove("hidden");
+
+
 
             dex.classList.add("visible");
 
+
+
             dexControls.style.display = "block";
+
           }, 50);
+
         }
 
+
+
         document.getElementById("viewIcon").src =
+
           viewMode === "dex"
+
             ? "./assets/img/location_icon.png"
+
             : "./assets/img/egg_icon.png";
+
       }
 
+
+
       function createEggCard(i) {
-  const count = eggData[i];
-  const hue = (i * 137.5) % 360;
-  const card = document.createElement("div");
-  
-  // ADD THIS LINE: This gives the card a searchable identity
-  card.setAttribute('data-egg-id', i); 
 
-  card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
-  card.onclick = (e) => {
-    if (!e.target.closest(".qty-btn")) {
-      showEggDetails(i);
-    }
-  };
+        const count = eggData[i];
 
-  card.innerHTML = `
-    <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
-    <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
-    <div class="qty-controls">
-      <button class="qty-btn" onclick="update(${i}, -1)">-</button>
-      <span class="qty-display" style="font-weight:800">${count}</span>
-      <button class="qty-btn" onclick="update(${i}, 1)">+</button>
-    </div>`;
 
-  return card;
-}
+
+        const hue = (i * 137.5) % 360;
+
+
+
+        const card = document.createElement("div");
+
+
+
+        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
+
+
+
+        card.onclick = (e) => {
+
+          if (!e.target.closest(".qty-btn")) {
+
+            showEggDetails(i);
+
+          }
+
+        };
+
+
+
+        card.innerHTML = `
+
+
+
+          <span style="font-size:0.7rem; font-weight:700;">#${i}</span>
+
+
+
+          <div class="egg-icon" style="--hue: ${hue}deg">🥚</div>
+
+
+
+          <div class="qty-controls">
+
+
+
+            <button class="qty-btn" onclick="update(${i}, -1)">-</button>
+
+
+
+            <span style="font-weight:800">${count}</span>
+
+
+
+            <button class="qty-btn" onclick="update(${i}, 1)">+</button>
+
+
+
+          </div>`;
+
+
+
+        return card;
+
+      }
+
+
 
       function renderDex() {
+
         const grid = document.getElementById("eggGrid");
+
+
 
         grid.innerHTML = "";
 
+
+
         for (let i = 1; i <= totalUniqueEggs; i++) {
+
           const count = eggData[i];
+
+
 
           if (currentFilter === "collected" && count === 0) continue;
 
+
+
           if (currentFilter === "missing" && count > 0) continue;
+
+
 
           if (currentFilter === "duplicates" && count < 2) continue;
 
+
+
           grid.appendChild(createEggCard(i));
+
         }
+
       }
 
+
+
       function renderLocations() {
+
         const zone = document.getElementById("locationZone");
+
+
 
         zone.innerHTML = "";
 
+
+
         areaData.forEach((area) => {
+
           const totalInCat = area.eggs.length;
+
+
 
           const ownedInCat = area.eggs.filter((id) => eggData[id] > 0).length;
 
+
+
           const missingInCat = totalInCat - ownedInCat;
+
+
 
           const block = document.createElement("div");
 
+
+
           block.className = "location-block";
+
+
 
           block.innerHTML = `
 
+
+
       <div class="location-header">
+
+
 
         <img src="${area.img}" class="location-img" alt="${area.name}">
 
+
+
         <div class="location-text">
+
+
 
           <h3>${area.name}</h3>
 
+
+
           <p>${area.desc}</p>
+
+
 
           <div class="category-stats">
 
+
+
             <span class="badge badge-total">Total: ${totalInCat}</span>
+
+
 
             <span class="badge badge-owned">Owned: ${ownedInCat}</span>
 
+
+
             <span class="badge badge-missing">Missing: ${missingInCat}</span>
+
+
 
           </div>
 
+
+
         </div>
+
+
 
       </div>`;
 
+
+
           const slider = document.createElement("div");
+
+
 
           slider.className = "egg-slider";
 
+
+
           slider.onwheel = (e) => {
+
             if (e.deltaY !== 0) {
+
               e.preventDefault();
 
+
+
               slider.scrollLeft += e.deltaY;
+
             }
+
           };
 
+
+
           area.eggs.forEach((eggId) => {
+
             slider.appendChild(createEggCard(eggId));
+
           });
+
+
 
           block.appendChild(slider);
 
+
+
           zone.appendChild(block);
+
         });
+
+
 
         const disclaimer = document.createElement("div");
 
+
+
         disclaimer.className = "disclaimer-card";
+
+
 
         disclaimer.innerHTML = `
 
+
+
     <div style="margin-bottom: 8px;">
+
+
 
       <i class="fas fa-exclamation-triangle"></i> 
 
+
+
       Note: These egg locations are based on the 2025 Hunt. 
+
+
 
     </div>
 
+
+
     <a href="https://www.youtube.com/watch?v=EpSWCxWuVto" target="_blank" 
+
+
 
        style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px 12px; border-radius: 10px; margin-bottom: 8px;">
 
+
+
        <i class="fab fa-youtube" style="color: #ff0000;"></i> 
+
+
 
        View 2025 Source Guide
 
+
+
     </a>
+
+
 
     <br>
 
+
+
     <span style="font-size: 0.8rem; opacity: 0.9;">Pm me if this is not accurate! - <strong>Serxe</strong></span>
+
+
 
   `;
 
+
+
         zone.appendChild(disclaimer);
+
       }
 
+
+
       function render() {
+
         if (viewMode === "dex") renderDex();
+
         else renderLocations();
+
+
 
         updateStats();
 
+
+
         localStorage.setItem("eggInventory", JSON.stringify(eggData));
+
       }
 
-      // Replace your existing update function with this:
-function update(id, change) {
-  // 1. Update Data
-  eggData[id] = Math.max(0, eggData[id] + change);
-  localStorage.setItem("eggInventory", JSON.stringify(eggData));
-  
-  // 2. Update Stats (Top bar)
-  updateStats();
 
-  // 3. Update UI without jumping
-  if (viewMode === "dex") {
-    // If a filter is active, we must re-render because the card might need to disappear
-    if (currentFilter !== 'all') {
-      const scrollPos = window.pageYOffset;
-      renderDex();
-      window.scrollTo(0, scrollPos);
-    } else {
-      // IF "ALL" IS SELECTED: Find the specific card and update just that one
-      const card = document.querySelector(`.egg-card[data-egg-id="${id}"]`);
-      if (card) {
-        const count = eggData[id];
-        // Update the visual class (color)
-        card.className = `egg-card ${count > 0 ? "has-any" : "is-missing"}`;
-        // Update the number text
-        const display = card.querySelector('.qty-display');
-        if (display) display.innerText = count;
+
+      function update(id, change) {
+
+        eggData[id] = Math.max(0, eggData[id] + change);
+
+
+
+        render();
+
       }
-    }
-  } else {
-    // Location Mode Logic
-    const locZone = document.getElementById("locationZone");
-    const scrollPos = locZone.scrollTop;
-    renderLocations();
-    locZone.scrollTop = scrollPos;
-  }
-}
+
+
 
       let hasCelebrated = false;
 
+
+
       function updateStats() {
+
         const uniqueCollected = Object.values(eggData).filter(
+
           (count) => count > 0,
+
         ).length;
+
+
 
         const totalSum = Object.values(eggData).reduce((a, b) => a + b, 0);
 
+
+
         const percent = Math.round((uniqueCollected / totalUniqueEggs) * 100);
+
+
 
         document.getElementById("progressBar").style.width = percent + "%";
 
+
+
         document.getElementById("progressPercent").innerText = percent + "%";
+
+
 
         document.getElementById("totalEggsCount").innerText = totalSum;
 
+
+
         if (percent === 100 && !hasCelebrated) {
+
           fireCelebration();
 
+
+
           hasCelebrated = true;
+
         } else if (percent < 100) {
+
           hasCelebrated = false;
+
         }
+
       }
 
+
+
       function fireCelebration() {
+
         const duration = 3 * 1000;
+
+
 
         const end = Date.now() + duration;
 
+
+
         (function frame() {
+
           confetti({
+
             particleCount: 3,
+
+
 
             angle: 60,
 
+
+
             spread: 55,
+
+
 
             origin: { x: 0, y: 0.6 },
 
+
+
             colors: ["#ffb7ce", "#b2e2f2", "#ffcf96"],
+
           });
 
+
+
           confetti({
+
             particleCount: 3,
+
+
 
             angle: 120,
 
+
+
             spread: 55,
+
+
 
             origin: { x: 1, y: 0.6 },
 
+
+
             colors: ["#ffb7ce", "#b2e2f2", "#ffcf96"],
+
           });
 
+
+
           if (Date.now() < end) {
+
             requestAnimationFrame(frame);
+
           }
+
         })();
 
+
+
         Swal.fire({
+
           title: "Egg Master!",
+
+
 
           text: "Congratulations! You have collected all 100 eggs!",
 
+
+
           icon: "success",
 
+
+
           confirmButtonColor: "#ffb7ce",
+
         });
+
       }
 
+
+
       function setFilter(f, btn) {
+
         currentFilter = f;
 
+
+
         document
+
           .querySelectorAll(".filter-btn")
+
           .forEach((b) => b.classList.remove("active"));
+
+
 
         btn.classList.add("active");
 
+
+
         render();
+
       }
 
+
+
       async function checkFirstTime() {
+
         if (!userData.name) {
+
           const { value: name } = await Swal.fire({
+
             title: "Welcome!",
+
+
 
             input: "text",
 
+
+
             inputPlaceholder: "Enter name",
+
+
 
             confirmButtonColor: "#ffb7ce",
 
+
+
             allowOutsideClick: false,
+
           });
 
+
+
           if (name) {
+
             userData = { name: name };
+
+
 
             localStorage.setItem("eggUserData", JSON.stringify(userData));
 
+
+
             updateProfileUI();
+
           }
+
         } else {
+
           updateProfileUI();
+
         }
+
       }
+
+
 
       function copyTradeText() {
+
         let missing = [],
+
           extras = [],
+
           owned = [];
+
         for (let i = 1; i <= totalUniqueEggs; i++) {
+
           if (eggData[i] === 0) missing.push(i);
+
           else {
+
             owned.push(i);
+
             if (eggData[i] > 1) extras.push(i);
+
           }
+
         }
+
+
 
         const formatRange = (nums) => {
+
           if (nums.length === 0) return "";
+
           nums.sort((a, b) => a - b);
+
           let result = [],
+
             start = nums[0],
+
             end = nums[0];
+
           for (let i = 1; i <= nums.length; i++) {
+
             if (i < nums.length && nums[i] === end + 1) end = nums[i];
+
             else {
+
               result.push(start === end ? start : `${start}-${end}`);
+
               if (i < nums.length) start = end = nums[i];
+
             }
+
           }
+
           return result.join(",");
+
         };
 
+
+
         let textToCopy = "";
+
         let emptyTitle = "Empty List",
+
           emptyMsg = "No eggs found for this category.",
+
           emptyIcon = "info";
 
+
+
         if (currentFilter === "all") {
+
           let parts = [];
+
           if (extras.length > 0) parts.push(`Extra:#${formatRange(extras)}`);
+
           if (missing.length > 0) parts.push(`Need:#${formatRange(missing)}`);
+
           textToCopy = parts.join(" ");
+
           if (!textToCopy && owned.length === totalUniqueEggs) {
+
             emptyTitle = "Congratulations!";
+
             emptyMsg = "Your EggDex is 100% complete! Great job!";
+
             emptyIcon = "success";
+
           }
+
         } else if (currentFilter === "collected") {
+
           textToCopy = owned.length > 0 ? `Have:#${formatRange(owned)}` : "";
+
           if (!textToCopy) emptyMsg = "Your collection is empty. Time to hunt!";
+
         } else if (currentFilter === "missing") {
+
           textToCopy =
+
             missing.length > 0 ? `Need:#${formatRange(missing)}` : "";
+
           if (!textToCopy && owned.length === totalUniqueEggs) {
+
             emptyTitle = "Hunt Complete!";
+
             emptyMsg = "You aren't missing any eggs!";
+
             emptyIcon = "success";
+
           }
+
         } else if (currentFilter === "duplicates") {
+
           textToCopy = extras.length > 0 ? `Extra:#${formatRange(extras)}` : "";
+
           if (!textToCopy) emptyMsg = "No extra eggs to trade right now.";
+
         }
+
+
 
         if (!textToCopy) {
+
           Swal.fire({
+
             title: emptyTitle,
+
             text: emptyMsg,
+
             icon: emptyIcon,
+
             background: isDarkMode ? "#2d3436" : "#ffffff",
+
             color: isDarkMode ? "#dfe6e9" : "#2d3436",
+
             confirmButtonColor: "#ffb7ce",
+
           });
+
           return;
+
         }
 
+
+
         const charCount = textToCopy.length;
+
         const bgColor = isDarkMode ? "#1e272e" : "#ffffff";
+
         const textColor = isDarkMode ? "#dfe6e9" : "#2d3436";
+
         const boxColor = isDarkMode ? "rgba(255,255,255,0.05)" : "#f8f9fa";
 
+
+
         // Badge Logic Colors
+
         const publicOk = charCount <= 99;
+
         const privateOk = charCount <= 255;
 
+
+
         Swal.fire({
+
           title: "Copy Trade List",
+
           background: bgColor,
+
           color: textColor,
+
           showCancelButton: true,
+
           confirmButtonText: "Copy to Clipboard",
+
           confirmButtonColor: "#ffb7ce",
+
           cancelButtonText: "Close",
+
           html: `
+
       <div style="text-align: left; font-family: 'Fredoka', sans-serif;">
+
         
+
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+
           <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${publicOk ? "#55efc4" : "#ff7675"}; background: ${publicOk ? "rgba(85, 239, 196, 0.1)" : "rgba(255, 118, 117, 0.1)"};">
+
             <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${publicOk ? "#55efc4" : "#ff7675"};">Public Chat</div>
+
             <div style="font-weight: 700; font-size: 1rem; color: ${publicOk ? "#55efc4" : "#ff7675"};">${publicOk ? "✓ OK" : "✗ TOO LONG"}</div>
+
           </div>
+
           
+
           <div style="flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid ${privateOk ? "#55efc4" : "#ff7675"}; background: ${privateOk ? "rgba(85, 239, 196, 0.1)" : "rgba(255, 118, 117, 0.1)"};">
+
             <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; color: ${privateOk ? "#55efc4" : "#ff7675"};">Private / PM</div>
+
             <div style="font-weight: 700; font-size: 1rem; color: ${privateOk ? "#55efc4" : "#ff7675"};">${privateOk ? "✓ OK" : "✗ TOO LONG"}</div>
+
           </div>
+
         </div>
+
+
 
         <div style="background: ${boxColor}; padding: 15px; border-radius: 15px; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 15px;">
+
            <div style="font-size: 0.9rem; word-break: break-all; line-height: 1.4; color: ${textColor};">${textToCopy}</div>
+
         </div>
+
+
 
         <div style="text-align: center; font-size: 0.85rem; opacity: 0.8;">
+
            Total: <strong>${charCount}</strong> characters
+
         </div>
+
       </div>
+
     `,
+
         }).then((result) => {
+
           if (result.isConfirmed) {
+
             navigator.clipboard.writeText(textToCopy);
+
             Swal.fire({
+
               title: "Copied!",
+
               toast: true,
+
               position: "top-end",
+
               timer: 2000,
+
               showConfirmButton: false,
+
               icon: "success",
+
             });
+
           }
+
         });
+
       }
 
+
+
       function updateProfileUI() {
+
         document.getElementById("displayUser").innerText = userData.name;
+
+
 
         const apiAvatar = `https://ui-avatars.com/api/?background=ffb7ce&color=fff&bold=true&name=${encodeURIComponent(userData.name)}`;
 
+
+
         document.getElementById("displayPic").innerHTML =
+
           `<img src="${userData.photo || "./assets/img/user_profile.png"}" onerror="this.src='${apiAvatar}'">`;
+
       }
 
+
+
       function takeScreenshot() {
+
         const element = document.getElementById("captureZone");
 
+
+
         Swal.fire({
+
           title: "Snapping Photo...",
+
+
 
           allowOutsideClick: false,
 
+
+
           didOpen: () => Swal.showLoading(),
+
         });
 
+
+
         html2canvas(element, {
+
           backgroundColor: getComputedStyle(document.body).backgroundColor,
+
+
 
           scale: 2,
 
+
+
           useCORS: true,
+
         }).then((canvas) => {
+
           const link = document.createElement("a");
+
+
 
           link.download = `EggDex_${userData.name}.png`;
 
+
+
           link.href = canvas.toDataURL();
+
+
 
           link.click();
 
+
+
           Swal.fire("Saved!", "Screenshot downloaded.", "success");
+
         });
+
       }
 
+
+
      async function openAssistant() {
+
   Swal.fire({
+
     title: "EggDex Guide & Privacy",
+
     icon: "info",
+
     customClass: {
+
       popup: isDarkMode ? "dark-mode" : "",
+
     },
+
     background: isDarkMode ? "var(--card)" : "#ffffff",
+
     color: "var(--text)",
+
     confirmButtonColor: "#ffb7ce",
+
     confirmButtonText: "Got it!",
+
     width: "500px",
+
     html: `
+
       <div style="text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--text);">
+
         <div style="text-align: center; margin-bottom: 20px;">
+
           <h3 style="margin: 0; color: var(--primary); font-family: 'Fredoka', sans-serif;">Happy Easter my fellow Graalians! 🐰</h3>
+
           <div style="margin-top: 10px;">
+
             <img src="./assets/img/serxe_easter_icon.png" alt="Serxe" style="width: 60px; height: auto; display: inline-block;">
+
           </div>
+
         </div>
+
+
 
         <p><strong style="color: var(--text);">Tracking all 100 eggs for the Graal Online Classic Easter Hunt 2026!</strong></p>
+
         
+
         <p style="margin-top: 20px; color: var(--primary); font-weight: bold;">
+
           <i class="fas fa-question-circle"></i> How To Use
+
         </p>
+
         <ul style="padding-left: 20px; margin-top: 5px; color: var(--text);">
+
           <li>Use <strong style="color:var(--success)">+</strong> and <strong style="color:var(--danger)">-</strong> to manage your egg counts.</li>
+
           <li><strong><i class="fas fa-copy"></i> Copy List:</strong> Generates a compact text for <b>Graal Game Chat</b>.</li>
+
           <li><strong><i class="fas fa-camera"></i> Screenshot:</strong> Saves a high-quality image of your grid.</li>
+
           <li>Tap the bottom <i class="fas fa-map-marker-alt"></i> icon to see <strong>Egg Locations</strong>.</li>
+
         </ul>
 
+
+
         <p style="margin-top: 20px; color: var(--success); font-weight: bold;">
+
           <i class="fas fa-shield-alt"></i> Your Data & Privacy
-        </p>
-        <p style="margin-top: 5px; padding-left: 5px; color: var(--text); opacity: 0.9;">
-          This app is 100% serverless. Your progress is stored locally in your <strong>browser memory</strong>.
+
         </p>
 
+        <p style="margin-top: 5px; padding-left: 5px; color: var(--text); opacity: 0.9;">
+
+          This app is 100% serverless. Your progress is stored locally in your <strong>browser memory</strong>.
+
+        </p>
+
+
+
         <div style="background-color: rgba(255, 207, 150, 0.15); border-left: 4px solid var(--danger); padding: 10px; margin-top: 15px; border-radius: 8px;">
+
           <p style="margin: 0; color: var(--text);"><strong style="color: var(--danger);">IMPORTANT:</strong> Clearing browser cache will <b>reset progress</b>.</p>
+
         </div>
+
+
 
         <hr style="border: 0; border-top: 1px solid var(--gray); opacity: 0.3; margin: 20px 0;">
 
+
+
         <div style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; font-size: 0.8rem; text-align: center;">
+
             <p style="margin: 0; font-weight: bold; color: var(--primary);">Credits & Community</p>
+
             <p style="margin: 5px 0 0 0; opacity: 0.8;">
+
                 All images are from <b>Graal Online Classic</b>. This website is intended to help and support the Graal Classic community.
+
             </p>
+
         </div>
+
         
+
         <div style="text-align: center; font-size: 0.85rem; opacity: 0.8; color: var(--text); margin-top: 15px;">
+
           <p style="margin: 0;"><i class="fas fa-code"></i> Developed by: <strong>Serxe</strong></p>
+
         </div>
+
       </div>`,
+
   });
+
 }
 
+
+
       function showEggDetails(eggId) {
+
         const locations = areaData.filter((area) => area.eggs.includes(eggId));
+
+
 
         const hue = (eggId * 137.5) % 360;
 
+
+
         let locationHtml =
+
           locations
+
             .map(
+
               (loc) => `
+
+
 
       <div style="display: flex; align-items: center; gap: 12px; background: ${isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"}; padding: 12px; border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05);">
 
+
+
           <img src="${loc.img}" style="width: 70px; height: 50px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+
 
           <div style="text-align: left;">
 
+
+
               <div style="font-weight: 700; font-size: 0.9rem; color: var(--text);">${loc.name}</div>
+
+
 
               <div style="font-size: 0.75rem; opacity: 0.8; color: var(--text); line-height: 1.3; margin-top: 2px;">${loc.desc}</div>
 
+
+
           </div>
 
+
+
       </div>`,
+
             )
+
             .join("") ||
+
           `<p style="opacity: 0.6; padding: 20px;">No specific location data found for this egg.</p>`;
 
+
+
         Swal.fire({
+
           title: `Egg Details #${eggId}`,
+
+
 
           background: isDarkMode ? "var(--card)" : "#ffffff",
 
+
+
           color: "var(--text)",
+
+
 
           confirmButtonColor: "var(--primary)",
 
+
+
           confirmButtonText: "Close Guide",
+
+
 
           borderRadius: "24px",
 
+
+
           showCloseButton: true,
+
+
 
           html: `
 
+
+
         <div style="padding-top: 10px;">
+
+
 
           <div style="background: var(--accent); width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
 
+
+
             <div class="egg-icon" style="--hue: ${hue}deg; font-size: 60px;">🥚</div>
 
+
+
           </div>
+
+
 
           <div style="font-weight: 700; margin: 20px 0 12px; color: var(--text); text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
 
+
+
             <i class="fas fa-map-marker-alt" style="color: var(--danger);"></i> Where to Find
 
+
+
           </div>
+
+
 
           <div style="max-height: 250px; overflow-y: auto; padding-right: 5px;" class="custom-scroll">
 
+
+
             ${locationHtml}
+
+
 
           </div>
 
+
+
         </div>`,
+
         });
+
       }
 
+
+
       document.addEventListener('contextmenu', function(e) {
+
     e.preventDefault();
+
   });
+
+
 
   
+
   document.addEventListener('dragstart', function(e) {
+
     if (e.target.nodeName === 'IMG') {
+
       e.preventDefault();
+
     }
+
   });
 
+
+
  
+
   document.onkeydown = function(e) {
+
     if (e.keyCode == 123) { // F12
+
       return false;
+
     }
+
     if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { // Ctrl+Shift+I
+
       return false;
+
     }
+
     if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { // Ctrl+Shift+C
+
       return false;
+
     }
+
     if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { // Ctrl+Shift+J
+
       return false;
+
     }
+
     if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // Ctrl+U (View Source)
+
       return false;
+
     }
+
   };
+
       async function openSettings() {
+
         const res = await Swal.fire({
+
           title: "Settings",
+
+
 
           showDenyButton: true,
 
+
+
           showCancelButton: true,
+
+
 
           confirmButtonText: "Check All",
 
+
+
           denyButtonText: "Reset All",
+
+
 
           cancelButtonText: "Close",
 
+
+
           confirmButtonColor: "#b2e2f2",
+
+
 
           denyButtonColor: "#ffcf96",
 
+
+
           customClass: {
+
             popup: isDarkMode ? "dark-mode" : "",
+
           },
+
+
 
           background: isDarkMode ? "var(--card)" : "#ffffff",
 
+
+
           color: "var(--text)",
+
         });
 
+
+
         if (res.isConfirmed) {
+
           const confirmCheck = await Swal.fire({
+
             title: "Are you sure?",
+
+
 
             text: "This will mark all 100 eggs as collected!",
 
+
+
             icon: "warning",
 
+
+
             showCancelButton: true,
+
+
 
             confirmButtonColor: "#b2e2f2",
 
+
+
             confirmButtonText: "Yes, check all",
+
           });
 
+
+
           if (confirmCheck.isConfirmed) {
+
             for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 1;
+
+
 
             render();
 
+
+
             Swal.fire("Updated!", "All eggs marked as collected.", "success");
+
           }
+
         } else if (res.isDenied) {
+
           const confirmReset = await Swal.fire({
+
             title: "Reset All Progress?",
+
+
 
             text: "You will lose all your tracked eggs. This cannot be undone!",
 
+
+
             icon: "warning",
+
+
 
             showCancelButton: true,
 
+
+
             confirmButtonColor: "#ff7675",
+
+
 
             cancelButtonColor: "#b2e2f2",
 
+
+
             confirmButtonText: "Yes, reset everything!",
 
+
+
             customClass: {
+
               popup: isDarkMode ? "dark-mode" : "",
+
             },
+
           });
 
+
+
           if (confirmReset.isConfirmed) {
+
             for (let i = 1; i <= totalUniqueEggs; i++) eggData[i] = 0;
+
+
 
             hasCelebrated = false;
 
+
+
             render();
 
+
+
             Swal.fire("Reset!", "Your inventory has been cleared.", "success");
+
           }
+
         }
+
       }
+
+
 
       checkFirstTime();
 
+
+
       render();
+
     </script>
+
   </body>
+
 </html>
