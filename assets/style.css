@@ -122,12 +122,25 @@
         transition: width 0.5s ease;
       }
       .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-        gap: 12px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* default mobile */
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* Tablet */
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Desktop (YOUR TARGET) */
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
 
       .egg-card {
         background: var(--card);
@@ -384,4 +397,17 @@
   height: auto;
   visibility: visible;
   pointer-events: auto;
+}
+#dexControls {
+  display: block; /* force normal flow */
+}
+
+#dexControls .btn-group {
+  width: 100%;
+}
+
+#dexControls input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box; /* prevents overflow */
 }
