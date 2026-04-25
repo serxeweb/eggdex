@@ -10,7 +10,7 @@
   --header-bg: rgba(255, 255, 255, 0.9); /* Slightly more transparent */
   --border: #ffffff;
   --pattern: #ffe5ec;
-  --bg-image: url('eastergrove.png'); /* Light mode image */
+  --bg-image: url('eastergrovebg.png'); /* Light mode image */
   --bg-opacity: 0.15; /* Adjust this to make image lighter/darker */
 }
 
