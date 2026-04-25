@@ -179,7 +179,7 @@ body::before {
         border-color: var(--success);
       }
       .egg-card.is-missing {
-        opacity: 1.5;
+        opacity: 0.8;
         filter: grayscale(1);
       }
       .egg-icon {
