@@ -161,63 +161,37 @@
         background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
       }
       
-      /* New Version Switch Styles */
-      .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-        margin-left: 8px;
-        vertical-align: middle;
-      }
-      
-      .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.3s;
-        border-radius: 24px;
-      }
-      
-      .slider:before {
-        position: absolute;
-        content: "🚀";
-        font-size: 14px;
-        text-align: center;
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: 0.3s;
-        border-radius: 50%;
-        display: flex;
+      /* Header Button Styles */
+      .header-btn {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        line-height: 18px;
-      }
-      
-      input:checked + .slider {
+        gap: 6px;
+        padding: 6px 12px;
         background: linear-gradient(135deg, #ffb7ce, #b2e2f2);
+        color: #1a1a2e;
+        border: none;
+        border-radius: 20px;
+        font-family: 'Fredoka', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 8px;
       }
       
-      input:checked + .slider:before {
-        transform: translateX(20px);
+      .header-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 183, 206, 0.4);
       }
       
-      /* Dark mode switch adjustments */
-      body.dark-mode .slider {
-        background-color: #444;
+      .header-btn i {
+        font-size: 0.85rem;
+      }
+      
+      /* Dark mode header button adjustments */
+      body.dark-mode .header-btn {
+        background: linear-gradient(135deg, #ffb7ce, #b2e2f2);
+        color: #1a1a2e;
       }
     </style>
   </head>
@@ -240,10 +214,9 @@
 
           <i class="fas fa-cog header-icon" onclick="openSettings()"></i>
 
-          <label class="switch" title="Try Newer Version">
-            <input type="checkbox" id="newVersionSwitch" onchange="toggleNewVersion()">
-            <span class="slider round"></span>
-          </label>
+          <button class="header-btn" onclick="showNewVersionModal()" title="Try Latest Version">
+            <i class="fas fa-rocket"></i> Try Latest Version
+          </button>
         </div>
 
         <div id="displayPic" class="profile-pic">
