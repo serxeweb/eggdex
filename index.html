@@ -281,6 +281,11 @@
       />
     </button>
 
+    <!-- New Version Banner Button -->
+    <button id="newVersionBtn" class="assistant-btn" onclick="showNewVersionModal()" style="bottom: 180px; left: 20px; display: none;">
+      🚀
+    </button>
+
     <!-- New Version Corner Card -->
     <div id="newVersionModal" class="corner-card" style="display: none;">
       <button class="dismiss-btn" onclick="dismissNewVersionModal()">
@@ -1452,25 +1457,33 @@ function handleSearch(value) {
       // New Version Corner Card Logic
       function showNewVersionModal() {
         const modal = document.getElementById('newVersionModal');
+        const btn = document.getElementById('newVersionBtn');
         if (modal) {
           modal.style.display = 'block';
+          btn.style.display = 'none';
         }
       }
       
       function dismissNewVersionModal() {
         const modal = document.getElementById('newVersionModal');
+        const btn = document.getElementById('newVersionBtn');
         if (modal) {
           modal.style.display = 'none';
           localStorage.setItem('newVersionModalDismissed', 'true');
+          btn.style.display = 'block';
         }
       }
       
       // Show the modal on page load if not previously dismissed
       document.addEventListener('DOMContentLoaded', function() {
         const wasDismissed = localStorage.getItem('newVersionModalDismissed') === 'true';
+        const btn = document.getElementById('newVersionBtn');
         if (!wasDismissed) {
           // Small delay to let the page render first
           setTimeout(showNewVersionModal, 500);
+        } else {
+          // Show the rocket button if previously dismissed
+          btn.style.display = 'block';
         }
       });
     </script>
