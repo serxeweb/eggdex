@@ -1263,6 +1263,12 @@ function handleSearch(value) {
 
         </div>
 
+        <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+          <a href="#" onclick="event.preventDefault(); localStorage.removeItem('newVersionModalDismissed'); showNewVersionModal();" style="color: var(--primary); text-decoration: underline; font-size: 0.8rem;">
+            <i class="fas fa-rocket"></i> Show New Version Banner
+          </a>
+        </div>
+
       </div>`,
         });
       }
