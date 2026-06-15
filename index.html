@@ -160,6 +160,65 @@
       body.dark-mode .corner-card {
         background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
       }
+      
+      /* New Version Switch Styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.3s;
+        border-radius: 24px;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "🚀";
+        font-size: 14px;
+        text-align: center;
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 18px;
+      }
+      
+      input:checked + .slider {
+        background: linear-gradient(135deg, #ffb7ce, #b2e2f2);
+      }
+      
+      input:checked + .slider:before {
+        transform: translateX(20px);
+      }
+      
+      /* Dark mode switch adjustments */
+      body.dark-mode .slider {
+        background-color: #444;
+      }
     </style>
   </head>
 
@@ -180,6 +239,11 @@
           ></i>
 
           <i class="fas fa-cog header-icon" onclick="openSettings()"></i>
+
+          <label class="switch" title="Try Newer Version">
+            <input type="checkbox" id="newVersionSwitch" onchange="toggleNewVersion()">
+            <span class="slider round"></span>
+          </label>
         </div>
 
         <div id="displayPic" class="profile-pic">
@@ -279,11 +343,6 @@
         src="./assets/img/location_icon.png"
         alt="Toggle View"
       />
-    </button>
-
-    <!-- New Version Banner Button -->
-    <button id="newVersionBtn" class="assistant-btn" onclick="showNewVersionModal()" style="bottom: 180px; left: 20px; display: none;">
-      🚀
     </button>
 
     <!-- New Version Corner Card -->
@@ -1486,6 +1545,17 @@ function handleSearch(value) {
           btn.style.display = 'block';
         }
       });
+      
+      // Toggle New Version Switch Function
+      function toggleNewVersion() {
+        const switchEl = document.getElementById('newVersionSwitch');
+        if (switchEl.checked) {
+          // Open new version in new tab
+          window.open('https://eggdex.vercel.app/', '_blank');
+          // Uncheck the switch after opening
+          switchEl.checked = false;
+        }
+      }
     </script>
   </body>
 </html>
