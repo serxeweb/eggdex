@@ -32,126 +32,133 @@
 
     <link rel="stylesheet" href="./assets/style.css" />
     <style>
-      /* New Version Modal Styles */
-      .modal-overlay {
+      /* New Version Corner Card Styles */
+      .corner-card {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        bottom: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 16px;
+        padding: 16px 20px;
+        max-width: 280px;
+        width: calc(100% - 40px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         z-index: 9999;
-        backdrop-filter: blur(4px);
+        animation: slideInLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid rgba(255, 183, 206, 0.3);
       }
       
-      .modal-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 30px;
-        max-width: 400px;
-        width: 90%;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: modalSlideIn 0.3s ease-out;
-      }
-      
-      @keyframes modalSlideIn {
+      @keyframes slideInLeft {
         from {
           opacity: 0;
-          transform: translateY(-30px) scale(0.95);
+          transform: translateX(-100px);
         }
         to {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translateX(0);
         }
       }
       
-      .modal-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
+      .corner-card .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
       }
       
-      .modal-title {
+      .corner-card .card-icon {
+        font-size: 2rem;
+        animation: bounce 2s infinite;
+      }
+      
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      
+      .corner-card .card-title {
         font-family: 'Fredoka', sans-serif;
         color: #ffb7ce;
-        margin: 0 0 10px 0;
-        font-size: 1.5rem;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
       }
       
-      .modal-text {
-        color: #666;
-        margin: 0 0 25px 0;
-        line-height: 1.5;
-        font-size: 0.95rem;
+      .corner-card .card-subtitle {
+        color: rgba(255, 255, 255, 0.6);
+        margin: 2px 0 0 0;
+        font-size: 0.75rem;
       }
       
-      .modal-buttons {
+      .corner-card .card-description {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0 0 14px 0;
+        line-height: 1.4;
+        font-size: 0.85rem;
+      }
+      
+      .corner-card .card-buttons {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
       
-      .modal-btn {
-        padding: 14px 24px;
-        border-radius: 12px;
+      .corner-card .card-btn {
+        flex: 1;
+        padding: 10px 14px;
+        border-radius: 10px;
         font-family: 'Fredoka', sans-serif;
-        font-size: 1rem;
+        font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
         transition: all 0.2s ease;
         border: none;
       }
       
-      .modal-btn-primary {
+      .corner-card .card-btn-primary {
         background: linear-gradient(135deg, #ffb7ce, #b2e2f2);
-        color: #333;
+        color: #1a1a2e;
       }
       
-      .modal-btn-primary:hover {
+      .corner-card .card-btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(255, 183, 206, 0.4);
+        box-shadow: 0 6px 20px rgba(255, 183, 206, 0.4);
       }
       
-      .modal-btn-secondary {
-        background: transparent;
-        color: #888;
-        border: 2px solid #ddd;
+      .corner-card .card-btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
       
-      .modal-btn-secondary:hover {
-        background: #f5f5f5;
-        border-color: #ccc;
+      .corner-card .card-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
       }
       
-      /* Dark mode support */
-      body.dark-mode .modal-card {
-        background: #2d3436;
+      .corner-card .dismiss-btn {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 4px;
+        transition: color 0.2s;
       }
       
-      body.dark-mode .modal-title {
-        color: #ffb7ce;
+      .corner-card .dismiss-btn:hover {
+        color: rgba(255, 255, 255, 0.8);
       }
       
-      body.dark-mode .modal-text {
-        color: #b2b2b2;
-      }
-      
-      body.dark-mode .modal-btn-secondary {
-        color: #aaa;
-        border-color: #444;
-      }
-      
-      body.dark-mode .modal-btn-secondary:hover {
-        background: #3d4446;
-        border-color: #555;
+      /* Dark mode adjustments for corner card */
+      body.dark-mode .corner-card {
+        background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
       }
     </style>
   </head>
@@ -274,20 +281,26 @@
       />
     </button>
 
-    <!-- New Version Modal -->
-    <div id="newVersionModal" class="modal-overlay" style="display: none;">
-      <div class="modal-card">
-        <div class="modal-icon">🚀</div>
-        <h2 class="modal-title">Try the Newer Version!</h2>
-        <p class="modal-text">We've updated EggDex with new features, improved performance, and a better experience!</p>
-        <div class="modal-buttons">
-          <a href="https://eggdex.vercel.app/" target="_blank" class="modal-btn modal-btn-primary">
-            <i class="fas fa-external-link-alt"></i> Try New Version
-          </a>
-          <button class="modal-btn modal-btn-secondary" onclick="dismissNewVersionModal()">
-            Stay on Old Version
-          </button>
+    <!-- New Version Corner Card -->
+    <div id="newVersionModal" class="corner-card" style="display: none;">
+      <button class="dismiss-btn" onclick="dismissNewVersionModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="card-header">
+        <div class="card-icon">🚀</div>
+        <div>
+          <h3 class="card-title">Try the Newer Version!</h3>
+          <p class="card-subtitle">New features await</p>
         </div>
+      </div>
+      <p class="card-description">We've updated EggDex with new features, improved performance, and a better experience!</p>
+      <div class="card-buttons">
+        <a href="https://eggdex.vercel.app/" target="_blank" class="card-btn card-btn-primary">
+          <i class="fas fa-external-link-alt"></i> Try New
+        </a>
+        <button class="card-btn card-btn-secondary" onclick="dismissNewVersionModal()">
+          Stay Here
+        </button>
       </div>
     </div>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EB070YKWV1"></script>
@@ -1430,11 +1443,11 @@ function handleSearch(value) {
       checkFirstTime();
       render();
       
-      // New Version Modal Logic
+      // New Version Corner Card Logic
       function showNewVersionModal() {
         const modal = document.getElementById('newVersionModal');
         if (modal) {
-          modal.style.display = 'flex';
+          modal.style.display = 'block';
         }
       }
       
